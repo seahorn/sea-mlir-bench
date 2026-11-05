@@ -1,0 +1,2184 @@
+# Benchmark family manifest (sea-mlir utils/bench.py; docs/Benchmarks.md in sea-mlir).
+# expected: sat | unsat | unknown-ok | pending (not run yet); tier: smoke (<5 s) | quick (<60 s) | full (<900 s) | hard
+# (tracked, not gated); time: wall seconds when established; args: per-job sea-vc args
+# appended to the configuration's. counters: {<stat>: {max | min | exact: N, why, seeded}} completeness bounds
+# (defaults.counters, counter-rules [{jobs: regex, counters, why}], job counters; a bound without `seeded`
+# is deliberate: establish never changes it).
+family: stellar
+license: Apache-2.0 (C ports derived from stellar-core), see NOTICE
+description: stellar-core hand ports to C (LedgerEntryScope, TTL merge / commute, tx-set partition, conflicts, fees, parallel
+  validator) with ghost-state specs, per K
+sources:
+  stellar-core: https://github.com/stellar/stellar-core a1f4383b588f56c01c72fe3318eb9d87fe09053e
+  seahorn: seahorn sea-mlir branch 1312254b1142e781ff5eda66a5c7255fd47a1e2c, profile share/seahorn/profiles/sea-mlir-export.yaml
+  clang: Ubuntu clang version 18.1.3 (1ubuntu1)
+defaults:
+  args: [--lower, --seam, --widen-memory=4]
+  timeout: 900
+  mem: 16384
+established:
+  sea-mlir:
+    rev: 6d6833cb8e6aea70fffbf231c2e681d07bcd9204
+    branch: bench-gate
+    dirty: false
+  sea-vc-sha256: 6e679ef1bdbbd31114a42c81e224f7e69ebdabb531198b96e39b11acc47a3ac6
+  date: '2026-11-04T17:49:33'
+  par: 4
+  config:
+    args: [--lower, --seam, --widen-memory=4]
+    solver: null
+    timeout: 900
+    mem: 16384
+  note: '2026-11-04: runs of an earlier establish (8 parallel, 24 GB cap) reused for jobs that finished within 30 s
+    or did not finish; all others ran at 4 parallel, 16 GB cap (shared machine). Gates use the manifest cap (16 GB).'
+jobs:
+  comm-full-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.3
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=1, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME, -DPRE_RO_MONO]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: b9082168732b12a6a9f6f0c10e49f3d47f7f8b4c68b3aa392e8f536453bb9171
+    established: unsat
+  comm-full-K2:
+    expected: unsat
+    tier: smoke
+    time: 0.56
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=2, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME, -DPRE_RO_MONO]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 5ccfaab36ee17ca173e9561b87cb5075b614e6c74b5a167b0d4b326715133302
+    established: unsat
+  comm-full-K3:
+    expected: unsat
+    tier: smoke
+    time: 2.12
+    harness-expected: unsat
+    tags: [proof, canary]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=3, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME, -DPRE_RO_MONO]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 54fe4dec366ebe386dd6c23b031579180c80131b0b8c4e68cc371903d4eab1c0
+    established: unsat
+    counters:
+      vc.ackermann-constraints:
+        max: 0
+        seeded: 2026-11-04 sea-vc 1615517919f1
+      vc.ackermann-reads:
+        max: 0
+        seeded: 2026-11-04 sea-vc 1615517919f1
+  comm-full-no-mono-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.41
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=1, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 9736d36415b0bc7e141bd2572ae9564074d8a2f0c9a7d63274408a012733db47
+    established: unsat
+  comm-full-no-mono-K2:
+    expected: unsat
+    tier: smoke
+    time: 1.21
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=2, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 518fe750708a68d8dd658763e57b1e8ee986441f05e1db00f681745aeb280b77
+    established: unsat
+  comm-full-no-mono-K3:
+    expected: unsat
+    tier: smoke
+    time: 2.51
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=3, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 63ca930a192a9e76ce4be4f06ac957b638efad17c83a2e662cf71f50685896d2
+    established: unsat
+  comm-no-partition-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.34
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=1, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: b05e7eb7f68da8de48ca38b5674e95bff9866b494fe0fe34f225744ff1400ba7
+    established: unsat
+  comm-no-partition-K2:
+    expected: sat
+    tier: smoke
+    time: 0.61
+    harness-expected: sat
+    tags: [reach]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=2, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 26228484e246c9ca689da2f3c245e4aabdc5ed7efc1eb4b601d0737e18dd18d7
+    established: sat
+  comm-no-ro_present-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.33
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=1, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_SAME]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 344ac375d04d14788d7dc3ad8a9e386dc5f6ebb10b9439aa4b25f5895945c7d4
+    established: unsat
+  comm-no-ro_present-K2:
+    expected: sat
+    tier: smoke
+    time: 0.78
+    harness-expected: sat
+    tags: [reach]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=2, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_SAME]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 1b026ef8f7f59b4182722655b6e109b5d7df62eeaeabfc5a5d3a8eb51d271baf
+    established: sat
+  comm-no-ro_same-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.34
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=1, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 1d1ef792a0057fc6bf1e7dffc400b6cf2880160b1950302d06c616bc5562a688
+    established: unsat
+  comm-no-ro_same-K2:
+    expected: sat
+    tier: smoke
+    time: 0.66
+    harness-expected: sat
+    tags: [reach]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=2, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 22d52aeecd44dc016bb7be3b97613b3b97c593385a62dccb6b14af96723b6702
+    established: sat
+  comm-no-same_isnew-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.33
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=1, -DPRE_PARTITION, -DPRE_RO_PRESENT, -DPRE_RO_SAME]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 4d409a83d145ae172e1e44c4e20d59761740d787c4c8342cbae43a0cfaba6ad8
+    established: unsat
+  comm-no-same_isnew-K2:
+    expected: sat
+    tier: smoke
+    time: 0.84
+    harness-expected: sat
+    tags: [reach]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=2, -DPRE_PARTITION, -DPRE_RO_PRESENT, -DPRE_RO_SAME]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c5e7e2e0f610808a0e989aeb9f607799169d944a3a20f8623373448d7ecfc372
+    established: sat
+  comm-none-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.71
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 8fd25cf7231cb39bf9e699c31c0caad44b77f77cce9e8b236f8cc332c25afe33
+    established: unsat
+  comm-none-K2:
+    expected: sat
+    tier: smoke
+    time: 0.58
+    harness-expected: sat
+    tags: [reach]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 8141f5c99c322f78350060a75da7e85a222903631be2c0ae989b7f9b6c6dc12e
+    established: sat
+  comm-reach-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.38
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=1, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME, -DPRE_RO_MONO, -DCOMM_REACH]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: f8b7380470964954d9cea618a4fc4a22e09a511a7942c81799e60bd41b2f6ea1
+    established: unsat
+  comm-reach-K2:
+    expected: sat
+    tier: smoke
+    time: 0.51
+    harness-expected: sat
+    tags: [reach]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=2, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME, -DPRE_RO_MONO, -DCOMM_REACH]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: f80b98f4db2ba98c7741b056b7ac980b035d65a183a15a2c04a020ca837ece50
+    established: sat
+  comm-revert-7e4a427f-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.18
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=1, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME, -DPRE_RO_MONO, -DREVERT_7E4A427F]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 85915c9e240de904d944c11aad178c87a3999ba15943a8d460c1b6bf3744200b
+    established: unsat
+  comm-revert-7e4a427f-K2:
+    expected: sat
+    tier: smoke
+    time: 0.34
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-COMM
+    export:
+      harness: harness/ttl_commute.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_commute.c
+      defines: [-DNT=2, -DPRE_PARTITION, -DPRE_SAME_ISNEW, -DPRE_RO_PRESENT, -DPRE_RO_SAME, -DPRE_RO_MONO, -DREVERT_7E4A427F]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: b5308a2832e6ef3c49b3b639d6e47b64f164cef071a5fc7d0479dc7beb35e6c6
+    established: sat
+  conf-cmut1-one-direction-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.06
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=1, -DCMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 721b89fe5f7a65b68e5688092861cf01ee587c7db9fe6bb764442df3e1cb07bb
+    established: unsat
+  conf-cmut1-one-direction-K2:
+    expected: sat
+    tier: smoke
+    time: 0.46
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=2, -DCMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c3d9a6efc7bfae0f80e83157b5f90f5b7b1788f4b222dde7c89233cafd4534d3
+    established: sat
+  conf-cmut2-no-ro-rw-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.09
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=1, -DCMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c0d7519eb74ad82aabcf6cbdc50adf53eca07340e0b160a0ae615da80d6807cb
+    established: unsat
+  conf-cmut2-no-ro-rw-K2:
+    expected: sat
+    tier: smoke
+    time: 0.49
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=2, -DCMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: ead58a5d7b5e06c9e750f29af6e0f7f1a89c6e40704f3988b7dac13b6b6c0997
+    established: sat
+  conf-cmut3-group-drops-last-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.09
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=1, -DCMUT=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: a554ee338e3a63e99c94b54896d50a68569af69159d2846fbbb917328775383d
+    established: unsat
+  conf-cmut3-group-drops-last-K2:
+    expected: sat
+    tier: smoke
+    time: 0.31
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=2, -DCMUT=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 01bb53e3b431452f67c8e430bcf6388e49f388e41e979f824f15dfeac5a11365
+    established: sat
+  conf-cmut4-pairs-as-singletons-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.09
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=1, -DCMUT=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 721b89fe5f7a65b68e5688092861cf01ee587c7db9fe6bb764442df3e1cb07bb
+    established: unsat
+  conf-cmut4-pairs-as-singletons-K2:
+    expected: sat
+    tier: smoke
+    time: 0.38
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=2, -DCMUT=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: d2721d12fa683ce44fc8a8070599a4e75fb53f32cf0125156aeb1a18c3927d55
+    established: sat
+  conf-contract-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.09
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 721b89fe5f7a65b68e5688092861cf01ee587c7db9fe6bb764442df3e1cb07bb
+    established: unsat
+  conf-contract-K2:
+    expected: unsat
+    tier: smoke
+    time: 0.84
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 2bd80860826dade68fa4fd8b73ebfd3d8e3576c52c0b56f7468dea89d33342ea
+    established: unsat
+  conf-contract-K3:
+    expected: unsat
+    tier: full
+    time: 152.16
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: f4ff92054127fc8554acb703066549fd74e328b81eab67bc5417fe898eec42bd
+    established: unsat
+  conf-exact-no-collision-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.09
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=1, -DCLAIM_SOUND]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 2832074479094949c9867f92eacfecefad447d285aea5a59c9f2f0dc4b0ec388
+    established: unsat
+  conf-exact-no-collision-K2:
+    expected: unsat
+    tier: smoke
+    time: 1.51
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=2, -DCLAIM_SOUND]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: ec791629560285c1875672af47b6be01f7823e5800fa4710f30091e641ebcc38
+    established: unsat
+  conf-exact-no-collision-K3:
+    expected: unsat
+    tier: full
+    time: 324.63
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-CONF
+    export:
+      harness: harness/conflicts_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: conflicts_port.c
+      defines: [-DN=3, -DCLAIM_SOUND]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: ffb027011a8acbc29af3bab9e269bdc4afea686689ab2a9605efa6c2de7860f8
+    established: unsat
+  fee-contract-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.08
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-FEE
+    export:
+      harness: harness/fee_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: fee_port.c
+      defines: [-DM=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: de421ba2e82733ce7f5292932d88b0f30e015328f22ed6067aed409c69084682
+    established: unsat
+  fee-contract-K2:
+    expected: unsat
+    tier: smoke
+    time: 0.29
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-FEE
+    export:
+      harness: harness/fee_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: fee_port.c
+      defines: [-DM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: b2e1c4401f3cf59d48f4e8925f22e5762acb7d52f6f40fc7cb1446539c00eafd
+    established: unsat
+  fee-contract-K3:
+    expected: unsat
+    tier: smoke
+    time: 0.78
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-FEE
+    export:
+      harness: harness/fee_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: fee_port.c
+      defines: [-DM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 7b43d505e209c7c63c7704069824905176d49c66215760b4f202dcfd17398ede
+    established: unsat
+  fee-revert-bcb13715-obligation-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.08
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-FEE
+    export:
+      harness: harness/fee_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: fee_port.c
+      defines: [-DM=1, -DREVERT_BCB13715]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 59faff2de14e0a0276b01c9c9fa7b68d6dec11e3b76d5ed3b5f00429cfb362b8
+    established: unsat
+  fee-revert-bcb13715-obligation-K2:
+    expected: sat
+    tier: smoke
+    time: 0.12
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-FEE
+    export:
+      harness: harness/fee_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: fee_port.c
+      defines: [-DM=2, -DREVERT_BCB13715]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: bc3b2a0fb7eebd09cc0b70d122d8182510425822c41d5acd205c04a1349a70fd
+    established: sat
+  fee-revert-bcb13715-wrap-diag-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.08
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-FEE
+    export:
+      harness: harness/fee_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: fee_port.c
+      defines: [-DM=1, -DREVERT_BCB13715, -DWRAP_DIAG]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: d2a7d87db1ce09b6bad958c1cff5ba9c0ef5520a3468321f6772125b33fcccc2
+    established: unsat
+  fee-revert-bcb13715-wrap-diag-K2:
+    expected: sat
+    tier: smoke
+    time: 0.13
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-FEE
+    export:
+      harness: harness/fee_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: fee_port.c
+      defines: [-DM=2, -DREVERT_BCB13715, -DWRAP_DIAG]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: d952e7cd04eec25b8c3c2b1a4afef9ab97689edd9b98308662d664e5be9beef4
+    established: sat
+  part-asym-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.16
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=1, -DASYM]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 8e3e8c455e1f22e19a714460947d3b5163fd9238d1490c9a8a1fab03b897f4f4
+    established: unsat
+  part-asym-K2:
+    expected: sat
+    tier: smoke
+    time: 1.3
+    harness-expected: sat
+    tags: [reach]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=2, -DASYM]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: f70d4816924afee0f3d01dd41298c28b4c8d807d95c456b271d791711f2f687c
+    established: sat
+  part-contract-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.16
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 8e3e8c455e1f22e19a714460947d3b5163fd9238d1490c9a8a1fab03b897f4f4
+    established: unsat
+  part-contract-K2:
+    expected: unsat
+    tier: smoke
+    time: 1.13
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c0ccac1d909f62e404aa11774119f1c37213414031705bb5636efb17ab9d291a
+    established: unsat
+  part-contract-K3:
+    expected: unsat
+    tier: smoke
+    time: 2.96
+    harness-expected: unsat
+    tags: [proof, canary]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: e07a98b85934e4615c824791aa47dd0b8b56320f3977b052c9cf7b513b0fa01a
+    established: unsat
+    counters:
+      vc.ackermann-constraints:
+        max: 0
+        seeded: 2026-11-04 sea-vc 1615517919f1
+      vc.ackermann-reads:
+        max: 0
+        seeded: 2026-11-04 sea-vc 1615517919f1
+  part-contract-K4:
+    expected: unsat
+    tier: quick
+    time: 19.78
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: cdaea7c9303a228c2cedc8b46daf29d7ba8d8b9dd435837974b1a81a15450d25
+    established: unsat
+  part-inb-dead-unroll:
+    expected: unsat
+    tier: quick
+    time: 14.16
+    harness-expected: null
+    tags: [inb-regression]
+    group: ST-PART
+    export:
+      copied-from: stellar-txset-inb-dead-unroll.mlir
+      note: early txset_port.c, -DN=2, vcc settings, bound 8
+    sha256: a0c7e9c2621f2f32a6fd76e16ab84dc105bd8197041626c7f2ac8fed71f60d89
+    established: unsat
+  part-pmut1-no-fastpath-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.16
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=1, -DPMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 6639ea0d5506b1bf6b275cc8afb03d2c0ece051fb99151bcb3848b9b204835ad
+    established: unsat
+  part-pmut1-no-fastpath-K2:
+    expected: unsat
+    tier: smoke
+    time: 0.99
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=2, -DPMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 9151c7ed07afddffffc11171a412db15ebb6a7f6724f4a8cc38042fb17fe0cad
+    established: unsat
+  part-pmut1-no-fastpath-K3:
+    expected: unsat
+    tier: smoke
+    time: 2.71
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=3, -DPMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 8bc1c3c46d6e19426f4e15a26fab0786efcc50d150430d2d561ed4b26588d9cb
+    established: unsat
+  part-pmut1-no-fastpath-K4:
+    expected: unsat
+    tier: quick
+    time: 17.72
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=4, -DPMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 00c73605027144509a8cfc85946e994412761cd365a6f829744201ef4543d785
+    established: unsat
+  part-pmut2-no-bin-restore-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.16
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=1, -DPMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 3a37df30bcc21bc5a0a8ddfb85c327607f9c5c26df6dceaebaa855441f8a8c50
+    established: unsat
+  part-pmut2-no-bin-restore-K2:
+    expected: unsat
+    tier: smoke
+    time: 0.85
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=2, -DPMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c6d4373ed056e75340a2664d01022e90cc969043933f7d0160787105bc12386b
+    established: unsat
+  part-pmut2-no-bin-restore-K3:
+    expected: unsat
+    tier: smoke
+    time: 2.42
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=3, -DPMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: ba15aa62f479e1f39299903fc3730add4df6b7e16e829d445e5c7efa28809ccd
+    established: unsat
+  part-pmut2-no-bin-restore-K4:
+    expected: sat
+    tier: quick
+    time: 6.75
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=4, -DPMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 989baf055fb5081d6abeb016664c8a50fb1760b386f8dff33977a8f9cd551677
+    established: sat
+  part-pmut3-no-txtocluster-K1:
+    expected: sat
+    tier: smoke
+    time: 0.17
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=1, -DPMUT=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 91c69f2885f05f350892adf0c93821361b06cc1cdb2ccb6150e250b20fa6f0ec
+    established: sat
+  part-reach-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.17
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=1, -DPREACH]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 2e5fdea05ddb92d830a0983077717e35875837182bb12e447ec44a3881eba77e
+    established: unsat
+  part-reach-K2:
+    expected: unsat
+    tier: smoke
+    time: 1.07
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=2, -DPREACH]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 834d704d02cb2fa10c139eccd9fabffe6228b58e79dd3a06f3186776b386c656
+    established: unsat
+  part-reach-K3:
+    expected: sat
+    tier: smoke
+    time: 3.42
+    harness-expected: sat
+    tags: [reach]
+    group: ST-PART
+    export:
+      harness: harness/txset_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: txset_port.c
+      defines: [-DN=3, -DPREACH]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c5ce4df988b8dfc8e1965af0022f3d36baf4ed0671e75a952871d068b6557df6
+    established: sat
+  scope-adopt-active-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.64
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1, -DSPEC_ADOPT_ACTIVE=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: e56d111fd3de2293df3a34d0a9b87451fc78e1b24f8a86f53e05ab4334004a27
+    established: unsat
+  scope-adopt-active-K2:
+    expected: sat
+    tier: smoke
+    time: 3.41
+    harness-expected: sat
+    tags: [reach]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2, -DSPEC_ADOPT_ACTIVE=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 275041868b775344abcc85b7e5fb4d5a847b7fc5fe410f666ff6e8731d5d3c39
+    established: sat
+  scope-mut1-read-moved-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.6
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1, -DMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 194d919cc7a55b523f4645b0a5e38e9d3271a0f2be60bd92c6c5bf186f049e68
+    established: unsat
+  scope-mut1-read-moved-K2:
+    expected: unsat
+    tier: smoke
+    time: 3.75
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2, -DMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 8327129af6f22a57d73bced75064d23a4a770c0595d94b446ea3678d65f9755c
+    established: unsat
+  scope-mut1-read-moved-K3:
+    expected: sat
+    tier: quick
+    time: 27.11
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=3, -DMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 93cbc1de2ece41f1a707a79966f2ad3e84d82f71a8f19dded932a08c94c53555
+    established: sat
+  scope-mut2-modify-inactive-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.61
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1, -DMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 72fc31b134f7f59e16fc27917810cfbc940560fe405f29cec20d8362210bb588
+    established: unsat
+  scope-mut2-modify-inactive-K2:
+    expected: unsat
+    tier: smoke
+    time: 3.65
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2, -DMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: adf677c996adbb42f6edc68231ac915b1d323bca6d118936ba6c18f79972456f
+    established: unsat
+  scope-mut2-modify-inactive-K3:
+    expected: sat
+    tier: quick
+    time: 27.93
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=3, -DMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: e79cec44603004401efea6d9c25af3fab6ac6e99b137d521677c465df5fc85e3
+    established: sat
+  scope-mut3-adoptfrom-nomark-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.6
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1, -DMUT=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 2a5c02454e00b1a08694f955541d6ca0af81f080b5797abbb73f79e2865e303b
+    established: unsat
+  scope-mut3-adoptfrom-nomark-K2:
+    expected: unsat
+    tier: smoke
+    time: 4.03
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2, -DMUT=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: aa1d82b86321ee091ebe286e569daefd9f588167c4302578f40936dda5d7cd37
+    established: unsat
+  scope-mut3-adoptfrom-nomark-K3:
+    expected: unsat
+    tier: quick
+    time: 54.7
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=3, -DMUT=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 89fdd2215968b698609fd39d54e3c3f497d10e6f868dc55a00c9fa34ae8befb3
+    established: unsat
+  scope-mut3-adoptfrom-nomark-K4:
+    expected: sat
+    tier: full
+    time: 650.58
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=4, -DMUT=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c57f4799c171082b472d122848959bf81ac5cf3863c9044f611cbe73a4aa465c
+    established: sat
+  scope-mut4-assign-noreset-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.61
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1, -DMUT=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: e3627c08aec3e6280f90117a39e96c4e7f7ef758019eaf08da7b23623f9f66ff
+    established: unsat
+  scope-mut4-assign-noreset-K2:
+    expected: unsat
+    tier: smoke
+    time: 3.92
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2, -DMUT=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: f66fa3f78bc645931844f762e791f7101cb7aa70900cca10a709c6e677653faf
+    established: unsat
+  scope-mut4-assign-noreset-K3:
+    expected: unsat
+    tier: full
+    time: 60.51
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=3, -DMUT=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c85b6b2e16623e62231e89f9dfe61885ef0996b1358fabc9b0ce9470ea65d6b6
+    established: unsat
+  scope-mut4-assign-noreset-K4:
+    expected: sat
+    tier: full
+    time: 804.95
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=4, -DMUT=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 953bf72be031f01dfc925a993dce04f44ba4f1a42a74523dd52f50903ecff211
+    established: sat
+  scope-mut5-adoptfrom-src-active-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.64
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1, -DMUT=5]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 2fe64dc976b5e56731fb2d5443fb57e40ccdeb08d14fff8f43682afc7548beff
+    established: unsat
+  scope-mut5-adoptfrom-src-active-K2:
+    expected: sat
+    tier: smoke
+    time: 4.12
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2, -DMUT=5]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 672cc2d2fe87f536c38ff62fafe050bb0c1ba7d6fb9464f2e0f6763907facd08
+    established: sat
+  scope-mut6-movector-nomark-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.56
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1, -DMUT=6]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 35293e7c1fc75ca3e86d9b1f1d9e27c80a54d56812ca60453258fc1d3ff96a60
+    established: unsat
+  scope-mut6-movector-nomark-K2:
+    expected: unsat
+    tier: smoke
+    time: 3.79
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2, -DMUT=6]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 549c40078d70b26c6b2af5f85953cad89a54f4cbf98b41d1f214a31609858131
+    established: unsat
+  scope-mut6-movector-nomark-K3:
+    expected: sat
+    tier: quick
+    time: 38.69
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=3, -DMUT=6]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: a9798d4d7eeb4076f7fc4b7933935d41792a82b396d242abf0493fdca2226521
+    established: sat
+  scope-mut7-id-ignores-ledger-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.63
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1, -DMUT=7]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 103e4cf11e98486b93a441a43bcf176fb6a10642d4ef7aa9645971126c296e25
+    established: unsat
+  scope-mut7-id-ignores-ledger-K2:
+    expected: sat
+    tier: smoke
+    time: 3.84
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2, -DMUT=7]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 302214ec35e59dc0be98eafd1e632cb3375b87e6e63edeb3d4355d819f1cda75
+    established: sat
+  scope-mut8-release-nomark-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.65
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1, -DMUT=8]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: fa538e989f58c9a863ecb71864cdd6e0edb52cf7c112c7ca7179614b39015faa
+    established: unsat
+  scope-mut8-release-nomark-K2:
+    expected: unsat
+    tier: smoke
+    time: 4.31
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2, -DMUT=8]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 06416fbfa7c6adc683b5f21499239bc24651ec7f96f16d29d08850cf710813a1
+    established: unsat
+  scope-mut8-release-nomark-K3:
+    expected: sat
+    tier: quick
+    time: 32.94
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=3, -DMUT=8]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: ce08169cd91e7201b49968e6183f92b7ea81826952ca885954e2cd4cd455a3e8
+    established: sat
+  scope-noterm-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.41
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1, -DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 680f3443fb43cf2b1515b2d144ace71212633cefc79a526e1f5169d25a861c6a
+    established: unsat
+  scope-noterm-K2:
+    expected: sat
+    tier: smoke
+    time: 1.32
+    harness-expected: sat
+    tags: [reach]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2, -DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 4fb5d8fcff61216ded7ffce293e9654b0b6d3074fdf84e9f5ebf951a76d1ac21
+    established: sat
+  scope-reach-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.36
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1, -DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: f9592242bdfcbe10b18a373ca7ea237d772f21702c698b50a6bc75d5db74afb5
+    established: unsat
+  scope-reach-K2:
+    expected: unsat
+    tier: smoke
+    time: 1.33
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2, -DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 222995e44e15b69d0d6f24859f2509efdf1f578514fa9e3e6e1229213fdebc4d
+    established: unsat
+  scope-reach-K3:
+    expected: unsat
+    tier: smoke
+    time: 4.28
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=3, -DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: ebfe918118970fd9ef3b74635c23d75567e9352bd3e1c85ea13878b3e41e88ce
+    established: unsat
+  scope-reach-K4:
+    expected: sat
+    tier: quick
+    time: 19.91
+    harness-expected: sat
+    tags: [reach]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=4, -DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 05a2655d0d7c183baf0dda41587caf417e1d4ccff523a5f3ce4376f570a53379
+    established: sat
+  scope-spec-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.6
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: bb8d92d704c3eb8102bc677988e0af1b045ef4e0404428965aeaf5dde4df4afd
+    established: unsat
+  scope-spec-K2:
+    expected: unsat
+    tier: smoke
+    time: 4.23
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: ddbbf9d93f2691a1fb3ec25a72b4f6436d108c4a4710c571bb7346edeb7d366d
+    established: unsat
+  scope-spec-K3:
+    expected: unsat
+    tier: quick
+    time: 37.06
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-SCOPE
+    export:
+      harness: harness/scope_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: scope_port.c
+      defines: [-DK=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 5d8194b1ee48a156c28c45a6e013c74d2d41de227e51e86e427c7471b4876372
+    established: unsat
+  ttl-caller-contract-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.25
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=1, -DPRE_GLOBAL_TTL_DIRTY, -DPRE_CALLER]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 70e37a174ea6d9aedbbb7c2ae2faec5e94dc61a273e675981d426a25285c04bc
+    established: unsat
+  ttl-caller-contract-K2:
+    expected: unsat
+    tier: smoke
+    time: 0.48
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=2, -DPRE_GLOBAL_TTL_DIRTY, -DPRE_CALLER]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 99278dd3c3b97c53297f7275cc86562cf01c2c69c81478ac7a1e40061ca61f55
+    established: unsat
+  ttl-caller-contract-K3:
+    expected: unsat
+    tier: smoke
+    time: 0.73
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=3, -DPRE_GLOBAL_TTL_DIRTY, -DPRE_CALLER]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 625d110ff0f37bdd1f9e1a026c06f6a62f1c510af4bc63a81064440f8354e5ea
+    established: unsat
+  ttl-caller-reach-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.21
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=1, -DPRE_GLOBAL_TTL_DIRTY, -DPRE_CALLER, -DTTL_CLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 950cabe1fbdbd766fb887b41d46bea9243f58fcd517ff240f1c941f2f7012898
+    established: unsat
+  ttl-caller-reach-K2:
+    expected: sat
+    tier: smoke
+    time: 0.39
+    harness-expected: sat
+    tags: [reach]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=2, -DPRE_GLOBAL_TTL_DIRTY, -DPRE_CALLER, -DTTL_CLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: a2af1a31d567f652be680b826762740f7863292fa5785291619913d7eaf5be8b
+    established: sat
+  ttl-caller-revert-7e4a427f-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.25
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=1, -DPRE_GLOBAL_TTL_DIRTY, -DPRE_CALLER, -DREVERT_7E4A427F]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 6b2e92d2f95953860a26436f54a95d6ce1a3ee49c5112e4a0c22f34c9cc6c941
+    established: unsat
+  ttl-caller-revert-7e4a427f-K2:
+    expected: sat
+    tier: smoke
+    time: 0.45
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=2, -DPRE_GLOBAL_TTL_DIRTY, -DPRE_CALLER, -DREVERT_7E4A427F]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: d7bc3e0cbc2296e7b60bdbf1ca47ef6c4574ae999e56595a483a2afbc2c2a989
+    established: sat
+  ttl-contract-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.25
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=1, -DPRE_GLOBAL_TTL_DIRTY]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 4ba7b0472a9bfe20fbf6ccc836f38a6f873b8a9ca1884f5bca8083cb61441947
+    established: unsat
+  ttl-contract-K2:
+    expected: unsat
+    tier: smoke
+    time: 0.48
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=2, -DPRE_GLOBAL_TTL_DIRTY]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 34a729f8b0977dacb3c3c78d928f510671d7b584edbe9a30b7685ea8b157c3ca
+    established: unsat
+  ttl-contract-K3:
+    expected: unsat
+    tier: smoke
+    time: 0.83
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=3, -DPRE_GLOBAL_TTL_DIRTY]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: a49199f3d2b15177e3277f10eb56a00749a87b24e7b7f4c6add4dcb232e06a70
+    established: unsat
+  ttl-mut1-ignore-rw-K1:
+    expected: sat
+    tier: smoke
+    time: 0.28
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=1, -DPRE_GLOBAL_TTL_DIRTY, -DTMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 968927aae851b37604e24c4fd7832f976dd29340a4848f45d5ce9731be5208ba
+    established: sat
+  ttl-mut2-isnew-K1:
+    expected: sat
+    tier: smoke
+    time: 0.27
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=1, -DPRE_GLOBAL_TTL_DIRTY, -DTMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 4836ff7c19252f72b6732cecf62d98492708dc0730d9dea6f03e512e186c58b7
+    established: sat
+  ttl-no-global-dirty-K1:
+    expected: sat
+    tier: smoke
+    time: 0.26
+    harness-expected: sat
+    tags: [reach]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: a2dfe2232d2c561441d5837274f89ddddc199378390c454f37545eaaab099fea
+    established: sat
+  ttl-reach-K1:
+    expected: sat
+    tier: smoke
+    time: 0.2
+    harness-expected: sat
+    tags: [reach]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=1, -DPRE_GLOBAL_TTL_DIRTY, -DTTL_CLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 98e46b59aa0d12a8e889c53eeab678350e1b59beb9911d06f977760230db16f5
+    established: sat
+  ttl-revert-7e4a427f-K1:
+    expected: sat
+    tier: smoke
+    time: 0.25
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-TTL
+    export:
+      harness: harness/ttl_merge_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: ttl_merge_port.c
+      defines: [-DNT=1, -DPRE_GLOBAL_TTL_DIRTY, -DREVERT_7E4A427F]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 6e9a2ea2d04d20edfcec2d721cd93fc0a18f23cc127ec43ea54385852d11bf5a
+    established: sat
+  val-sound-complete-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.07
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-VAL
+    export:
+      harness: harness/validator_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: validator_port.c
+      defines: [-DC=1, -DT=2, -DR=2, -DW=2, -DKEYS=8]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 79932a37a85488ac3458e932371b94feea577cbbc945bbbdf8025fee03ad43fc
+    established: unsat
+  val-sound-complete-K2:
+    expected: unsat
+    tier: smoke
+    time: 0.44
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-VAL
+    export:
+      harness: harness/validator_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: validator_port.c
+      defines: [-DC=2, -DT=2, -DR=2, -DW=2, -DKEYS=8]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: ae6003793093128be36d4375abdd12d9fcd3085a2f42be9b9ee3dda5db4282af
+    established: unsat
+  val-sound-complete-K3:
+    expected: unsat
+    tier: smoke
+    time: 2.78
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-VAL
+    export:
+      harness: harness/validator_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: validator_port.c
+      defines: [-DC=3, -DT=2, -DR=2, -DW=2, -DKEYS=8]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 335a75b5d3bf91eb88ec0bf27470a7b4fa9ceaaa3e1893a3649545c2fb5b27be
+    established: unsat
+  val-sound-complete-K4:
+    expected: unsat
+    tier: smoke
+    time: 4.1
+    harness-expected: unsat
+    tags: [proof]
+    group: ST-VAL
+    export:
+      harness: harness/validator_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: validator_port.c
+      defines: [-DC=4, -DT=2, -DR=2, -DW=2, -DKEYS=8]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 23643e6ddcac14b157f7bb28abb9bf0e69c1fd6ae10ecfd505de118370e8bc9e
+    established: unsat
+  val-vmut1-ro-unchecked-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.07
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-VAL
+    export:
+      harness: harness/validator_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: validator_port.c
+      defines: [-DC=1, -DT=2, -DR=2, -DW=2, -DKEYS=8, -DVMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 79932a37a85488ac3458e932371b94feea577cbbc945bbbdf8025fee03ad43fc
+    established: unsat
+  val-vmut1-ro-unchecked-K2:
+    expected: sat
+    tier: smoke
+    time: 0.2
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-VAL
+    export:
+      harness: harness/validator_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: validator_port.c
+      defines: [-DC=2, -DT=2, -DR=2, -DW=2, -DKEYS=8, -DVMUT=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 719b15c753ef057afcc76922e4874c76d22f582d9ccd39b96530cfe925d4c1cb
+    established: sat
+  val-vmut2-rw-vs-ro-unchecked-K1:
+    expected: unsat
+    tier: smoke
+    time: 0.07
+    harness-expected: unsat
+    tags: [mutant]
+    group: ST-VAL
+    export:
+      harness: harness/validator_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: validator_port.c
+      defines: [-DC=1, -DT=2, -DR=2, -DW=2, -DKEYS=8, -DVMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 79932a37a85488ac3458e932371b94feea577cbbc945bbbdf8025fee03ad43fc
+    established: unsat
+  val-vmut2-rw-vs-ro-unchecked-K2:
+    expected: sat
+    tier: smoke
+    time: 0.2
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-VAL
+    export:
+      harness: harness/validator_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: validator_port.c
+      defines: [-DC=2, -DT=2, -DR=2, -DW=2, -DKEYS=8, -DVMUT=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 9ef074f253f560fdd91ab58dff662ae38191e28c1f16e4e54f95bd8f17e9f68e
+    established: sat
+  val-vmut3-early-insert-K1:
+    expected: sat
+    tier: smoke
+    time: 0.13
+    harness-expected: sat
+    tags: [mutant]
+    group: ST-VAL
+    export:
+      harness: harness/validator_port.c
+      sweep: sweep.py
+      script: run_scope.sh
+      env:
+        SRC: validator_port.c
+      defines: [-DC=1, -DT=2, -DR=2, -DW=2, -DKEYS=8, -DVMUT=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 774e56b811540c2223c5336123d461180a3fbade7305cadb8a29fac7198ad7d4
+    established: sat

@@ -1,0 +1,285 @@
+# Benchmark family manifest (sea-mlir utils/bench.py; docs/Benchmarks.md in sea-mlir).
+# expected: sat | unsat | unknown-ok | pending (not run yet); tier: smoke (<5 s) | quick (<60 s) | full (<900 s) | hard
+# (tracked, not gated); time: wall seconds when established; args: per-job sea-vc args
+# appended to the configuration's. counters: {<stat>: {max | min | exact: N, why, seeded}} completeness bounds
+# (defaults.counters, counter-rules [{jobs: regex, counters, why}], job counters; a bound without `seeded`
+# is deliberate: establish never changes it).
+family: crafted
+license: 'Apache-2.0: adaptation (github.com/danblitzhou/verify-c-common 32e93ea) of SV-COMP tasks'
+description: crafted array benchmarks (bAnd, bOr, mapsum, mapavg, xor; bAnd select-size series), sea-mlir jobset array-crafted
+sources:
+  verify-c-common-fork: https://github.com/danblitzhou/verify-c-common 32e93ea3a8676efdea3263435ad7d28e11d377eb
+defaults:
+  args: [--lower, --seam, --widen-memory=4]
+  timeout: 900
+  mem: 16384
+established:
+  sea-mlir:
+    rev: 6d6833cb8e6aea70fffbf231c2e681d07bcd9204
+    branch: bench-gate
+    dirty: false
+  sea-vc-sha256: 6e679ef1bdbbd31114a42c81e224f7e69ebdabb531198b96e39b11acc47a3ac6
+  date: '2026-11-04T17:49:33'
+  par: 4
+  config:
+    args: [--lower, --seam, --widen-memory=4]
+    solver: null
+    timeout: 900
+    mem: 16384
+  note: '2026-11-04: runs of an earlier establish (8 parallel, 24 GB cap) reused for jobs that finished within 30 s
+    or did not finish; all others ran at 4 parallel, 16 GB cap (shared machine). Gates use the manifest cap (16 GB).'
+jobs:
+  bAnd:
+    expected: unsat
+    tier: smoke
+    time: 0.51
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bAnd
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd.mlir
+    sha256: 453b6c5005021455b5b1b5c3a9675c5bec85a241aca5640b97c8fb31981e5c25
+    established: unsat
+  bAnd2:
+    expected: unsat
+    tier: smoke
+    time: 0.3
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bAnd2
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd2.mlir
+    sha256: d8fda14ad4bdf11ccbd6444b95790b669a96e3a3db9038007fc0f1a8560239b9
+    established: unsat
+  bAnd_s10:
+    expected: unsat
+    tier: smoke
+    time: 0.32
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bAnd
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd_s10.mlir
+    sha256: d1822a48131c44dd36c2c894fd8c9c87e879ccc39a1588ee61993706331a3766
+    established: unsat
+  bAnd_s100:
+    expected: unsat
+    tier: smoke
+    time: 1.47
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bAnd
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd_s100.mlir
+    sha256: 664b3c87e84f5f29ea89968714fb3bced8a4a85614baf950f91789af82990a89
+    established: unsat
+  bAnd_s20:
+    expected: unsat
+    tier: smoke
+    time: 0.5
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bAnd
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd_s20.mlir
+    sha256: 8e04f2641db02900cac1c08c18701ad56c0ba5c06896f3beb84edf2816a71379
+    established: unsat
+  bAnd_s30:
+    expected: unsat
+    tier: smoke
+    time: 0.66
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bAnd
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd_s30.mlir
+    sha256: 2f53039ca81a4879af2bc2a9c2ef5ba682d46e32aa812f920945789591593241
+    established: unsat
+  bAnd_s40:
+    expected: unsat
+    tier: smoke
+    time: 0.5
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bAnd
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd_s40.mlir
+    sha256: e4cc8eb2eccbfed74ef835ba947aebb472dc0682a6055efff0830a552ac97678
+    established: unsat
+  bAnd_s50:
+    expected: unsat
+    tier: smoke
+    time: 0.98
+    tags: [canary]
+    export:
+      job: seahorn/jobs_bench/bAnd
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd_s50.mlir
+    sha256: 5723678640443346ec21eedce0b6ddf6159d5e029b63d198833f907cca46e4a9
+    established: unsat
+    counters:
+      vc.ackermann-constraints:
+        max: 0
+        seeded: 2026-11-04 sea-vc 1615517919f1
+      vc.ackermann-reads:
+        max: 0
+        seeded: 2026-11-04 sea-vc 1615517919f1
+  bAnd_s60:
+    expected: unsat
+    tier: smoke
+    time: 0.91
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bAnd
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd_s60.mlir
+    sha256: 15383cb4c98fb72fdea641c1c8dfed36b8f2c8d76bcf6f5769d5c32e70a2167d
+    established: unsat
+  bAnd_s70:
+    expected: unsat
+    tier: smoke
+    time: 1.24
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bAnd
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd_s70.mlir
+    sha256: 89196b65b21b04918a1e406161cefe5554e29aed06011edfdcd1b509ea8cd9d1
+    established: unsat
+  bAnd_s80:
+    expected: unsat
+    tier: smoke
+    time: 0.87
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bAnd
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd_s80.mlir
+    sha256: ea72730afef1d87517bea00e2c3618102272263703e547945fdc7091524bae87
+    established: unsat
+  bAnd_s90:
+    expected: unsat
+    tier: smoke
+    time: 1.36
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bAnd
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bAnd_s90.mlir
+    sha256: 9a6405b09b92f985fa2b19cc6a778b93ebdb672d219420041bdc53dd7ecf7c55
+    established: unsat
+  bOr:
+    expected: unsat
+    tier: smoke
+    time: 0.3
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bOr
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bOr.mlir
+    sha256: 7c0cdda2825c1326df6ac0ff1b574a9c33dae9dbc8ba95343b4c30d4ab6f9d5d
+    established: unsat
+  bOr2:
+    expected: unsat
+    tier: smoke
+    time: 0.57
+    tags: []
+    export:
+      job: seahorn/jobs_bench/bOr2
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/bOr2.mlir
+    sha256: 75075e1bc467899646fe837c1832b5c99298f42126a71d727fda5cbddeadf937
+    established: unsat
+  mapavg:
+    expected: unsat
+    tier: smoke
+    time: 0.33
+    tags: []
+    export:
+      job: seahorn/jobs_bench/mapavg
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/mapavg.mlir
+    sha256: 546e4e503b1d996dfb541ea2d32abe906e910899e8ea42c105b2176ecbf79432
+    established: unsat
+  mapavg2:
+    expected: unsat
+    tier: smoke
+    time: 1.16
+    tags: []
+    export:
+      job: seahorn/jobs_bench/mapavg2
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/mapavg2.mlir
+    sha256: f0161cf04a179daa44f660acd7598a72b49d2a7d541ab589c643b5fe83920943
+    established: unsat
+  mapsum:
+    expected: unsat
+    tier: smoke
+    time: 0.2
+    tags: []
+    export:
+      job: seahorn/jobs_bench/mapsum
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/mapsum.mlir
+    sha256: 179089559a9b91ac5077671b46fc969de78ed851f8d64f1e2bf914c4b6fcc66c
+    established: unsat
+  mapsum2:
+    expected: unsat
+    tier: smoke
+    time: 1.12
+    tags: [canary]
+    export:
+      job: seahorn/jobs_bench/mapsum2
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/mapsum2.mlir
+    sha256: 4a5c0f85b06d55983e6d5b9a757a09c888c6288a2cf91732cdedab45a8d1ca4c
+    established: unsat
+    counters:
+      vc.ackermann-constraints:
+        max: 0
+        seeded: 2026-11-04 sea-vc 1615517919f1
+      vc.ackermann-reads:
+        max: 0
+        seeded: 2026-11-04 sea-vc 1615517919f1
+  xor:
+    expected: unsat
+    tier: smoke
+    time: 0.18
+    tags: []
+    export:
+      job: seahorn/jobs_bench/xor
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/xor.mlir
+    sha256: c566a9c56d84a82660bd8abad0b338f751dba1d2a68db2b34da7f6a2e70582af
+    established: unsat
+  xor2:
+    expected: unsat
+    tier: smoke
+    time: 0.51
+    tags: []
+    export:
+      job: seahorn/jobs_bench/xor2
+      command: 'sea yama --yforce -y seahorn/sea.yaml -y jobs_bench/<job>/sea.yaml fpf --horn-bmc-engine=sea-mlir
+        (seahorn-dev18, verify-c-common build settings); the _sNN variants: select size NN (bAnd.c); bc build not recorded'
+      copied-from: $SEA_BENCH_HOME/corpus/array-crafted/xor2.mlir
+    sha256: 5afb4866cb4cb730ccdb20e927006837d1a095cb04fdac3d79105492bd872dea
+    established: unsat

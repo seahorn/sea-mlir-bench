@@ -1,0 +1,33 @@
+sea-mlir-bench
+Benchmarks for sea-mlir. The .mlir files and harness sources contain or are
+derived from the following works, each under its license:
+
+aws-c-common (https://github.com/awslabs/aws-c-common, commit
+b0fe4ee08f754784cf39918e53f922bbd751941b), via the verify-c-common proof
+harnesses (https://github.com/seahorn/verify-c-common, commit
+a3e6b0b97435e030320a4d1d443b36a03429c539):
+  AWS C Common
+  Copyright 2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  Licensed under the Apache License, Version 2.0 (LICENSE-aws-c-common,
+  NOTICE-aws-c-common). Used in: vcc/.
+
+Firedancer (https://github.com/firedancer-io/firedancer, commit
+37c658197b29deada95ea95a1afb04f7baea28fa):
+  Copyright 2022 Firedancer Contributors
+  Licensed under the Apache License, Version 2.0 (LICENSE-firedancer). Its
+  NOTICE (NOTICE-firedancer) lists third-party code; the HPACK jobs contain
+  the nghttp2 HPACK Huffman decoder (Copyright (c) 2013 Tatsuhiro
+  Tsujikawa, MIT license, text in NOTICE-firedancer). Used in: firedancer/.
+  Modifications: the code is compiled unchanged except where a job applies
+  a mutant, mock or proof overlay (sed scripts in firedancer/harness/,
+  named per job in firedancer/manifest.yaml); the gRPC flow-control
+  callbacks are extracted verbatim from fd_grpc_client.c.
+
+stellar-core (https://github.com/stellar/stellar-core, commit
+a1f4383b588f56c01c72fe3318eb9d87fe09053e):
+  Copyright 2014-2020 Stellar Development Foundation and contributors.
+  Licensed under the Apache License, Version 2.0 (LICENSE,
+  COPYING-stellar-core). Used in: stellar/.
+  Modifications: stellar/harness/*_port.c are hand ports of stellar-core
+  C++ sources to C (e.g. src/ledger/LedgerEntryScope.{h,cpp}); see
+  stellar/harness/PORT.md and stellar/PROVENANCE.md for the correspondence.

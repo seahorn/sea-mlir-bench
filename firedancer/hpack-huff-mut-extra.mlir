@@ -1,0 +1,323 @@
+// Exported from SeaHorn (harness.pp.ms.o.ul.cut.o.bc, function main).
+sea.program @"main" {
+^bb0:
+  %v0 = sea.mem.nondet "region.6" [0] : !sea.mem<!sea.ptr<64>, i8> loc("sm22")
+  %v1 = sea.mem.nondet "region.14" [1] : !sea.mem<!sea.ptr<64>, i8> loc("sm23")
+  %v2 = sea.mem.nondet "region.24" [2] : !sea.mem<!sea.ptr<64>, i8> loc("sm24")
+  %v3 = sea.mem.nondet "region.32" [3] : !sea.mem<!sea.ptr<64>, i8> loc("sm25")
+  %v4 = sea.mem.nondet "region.22" [4] : !sea.mem<!sea.ptr<64>, i8> loc("sm26")
+  %v5 = sea.mem.nondet "region.0" [5] : !sea.mem<!sea.ptr<64>, i8> loc("sm27")
+  %v6 = sea.mem.nondet "region.1" [6] : !sea.mem<!sea.ptr<64>, i8> loc("sm28")
+  %v7 = sea.mem.nondet "region.2" [7] : !sea.mem<!sea.ptr<64>, i8> loc("sm29")
+  %v8 = sea.global @"hp_lo" size 8 align 8 : !sea.ptr<64>
+  %v9 = sea.ptr.null : !sea.ptr<64>
+  %v10 = sea.store %v0[%v8], %v9 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>
+  %v11 = sea.global @"hp_wlo" size 8 align 8 : !sea.ptr<64>
+  %v12 = sea.ptr.null : !sea.ptr<64>
+  %v13 = sea.store %v1[%v11], %v12 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>
+  %v14 = sea.const 2 : i64 loc("hp_f0")
+  %v15 = sea.alloca %v14 align 8 [8] : i64 -> !sea.ptr<64> loc("hp_f0")
+  %v16 = sea.const 0 : i16
+  %v17 = sea.store %v4[%v15], %v16 inplace align 2 : !sea.mem<!sea.ptr<64>, i8>, i16
+  %v18 = sea.global @"hp_hi" size 8 align 8 : !sea.ptr<64>
+  %v19 = sea.ptr.null : !sea.ptr<64>
+  %v20 = sea.store %v2[%v18], %v19 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>
+  %v21 = sea.global @"hp_whi" size 8 align 8 : !sea.ptr<64>
+  %v22 = sea.ptr.null : !sea.ptr<64>
+  %v23 = sea.store %v3[%v21], %v22 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>
+  %v24 = sea.global @"hp_lo" size 8 align 8 : !sea.ptr<64>
+  %v25 = sea.ptr.null : !sea.ptr<64>
+  %v26 = sea.store %v10[%v24], %v25 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>
+  %v27 = sea.global @"hp_wlo" size 8 align 8 : !sea.ptr<64>
+  %v28 = sea.ptr.null : !sea.ptr<64>
+  %v29 = sea.store %v13[%v27], %v28 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>
+  %v30 = sea.const 0 : i16
+  %v31 = sea.store %v17[%v15], %v30 inplace align 2 : !sea.mem<!sea.ptr<64>, i8>, i16
+  %v32 = sea.global @"hp_hi" size 8 align 8 : !sea.ptr<64>
+  %v33 = sea.ptr.null : !sea.ptr<64>
+  %v34 = sea.store %v20[%v32], %v33 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>
+  %v35 = sea.global @"hp_whi" size 8 align 8 : !sea.ptr<64>
+  %v36 = sea.ptr.null : !sea.ptr<64>
+  %v37 = sea.store %v23[%v35], %v36 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>
+  %v38 = sea.nondet "nd_ulong" [9] : i64 loc("_0"("firedancer/harness/hpack_huff.c":54:13))
+  %v39 = sea.const 4097 : i64 loc("_1"("firedancer/harness/hpack_huff.c":55:12))
+  %v40 = sea.icmp ult, %v38, %v39 : i64 loc("_1"("firedancer/harness/hpack_huff.c":55:12))
+  sea.assume %v40 loc("firedancer/harness/hpack_huff.c":55:3)
+  %v41 = sea.nondet "nd_int" [10] : i32 loc("_2"("firedancer/harness/hpack_huff.c":56:15))
+  %v42 = sea.nondet "nd_ushort" [11] : i16 loc("_3"("firedancer/harness/hpack_huff.c":57:51))
+  %v43 = sea.const 511 : i16 loc("_4"("firedancer/harness/hpack_huff.c":58:10))
+  %v44 = sea.and %v42, %v43 : i16 loc("_4"("firedancer/harness/hpack_huff.c":58:10))
+  %v45 = sea.const 257 : i16 loc("_5"("firedancer/harness/hpack_huff.c":58:10))
+  %v46 = sea.icmp ult, %v44, %v45 : i16 loc("_5"("firedancer/harness/hpack_huff.c":58:10))
+  %v47 = sea.const 0 : i16 loc("_6"("firedancer/harness/hpack_huff.c":58:10))
+  %v48 = sea.icmp ne, %v42, %v47 : i16 loc("_6"("firedancer/harness/hpack_huff.c":58:10))
+  %v49 = sea.and %v48, %v46 : i1 loc("_7"("firedancer/harness/hpack_huff.c":58:10))
+  sea.assume %v49 loc("firedancer/harness/hpack_huff.c":58:3)
+  %v50 = sea.store %v31[%v15], %v42 inplace align 2 : !sea.mem<!sea.ptr<64>, i8>, i16 loc("firedancer/harness/hpack_huff.c":60:9)
+  %v51 = sea.global @"hp_lo" size 8 align 8 : !sea.ptr<64> loc("firedancer/harness/hpack_huff.c":61:9)
+  %v52 = sea.global @"hp_in" size 4096 align 16 : !sea.ptr<64> loc("firedancer/harness/hpack_huff.c":61:9)
+  %v53 = sea.store %v26[%v51], %v52 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64> loc("firedancer/harness/hpack_huff.c":61:9)
+  %v54 = sea.global @"hp_in" size 4096 align 16 : !sea.ptr<64> loc("_8"("firedancer/harness/hpack_huff.c":61:32))
+  %v55 = sea.ptr.index %v54 [%v38] strides [1] offset 0 inbounds : !sea.ptr<64>, i64 loc("_8"("firedancer/harness/hpack_huff.c":61:32))
+  %v56 = sea.global @"hp_hi" size 8 align 8 : !sea.ptr<64> loc("firedancer/harness/hpack_huff.c":61:24)
+  %v57 = sea.store %v34[%v56], %v55 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64> loc("firedancer/harness/hpack_huff.c":61:24)
+  %v58 = sea.global @"hp_wlo" size 8 align 8 : !sea.ptr<64> loc("firedancer/harness/hpack_huff.c":62:10)
+  %v59 = sea.global @"hp_out" size 8192 align 16 : !sea.ptr<64> loc("firedancer/harness/hpack_huff.c":62:10)
+  %v60 = sea.store %v29[%v58], %v59 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64> loc("firedancer/harness/hpack_huff.c":62:10)
+  %v61 = sea.const 1 : i64 loc("_9"("firedancer/harness/hpack_huff.c":62:42))
+  %v62 = sea.shl %v38, %v61 : i64 loc("_9"("firedancer/harness/hpack_huff.c":62:42))
+  %v63 = sea.global @"hp_out" size 8192 align 16 : !sea.ptr<64> loc("_10"("firedancer/harness/hpack_huff.c":62:36))
+  %v64 = sea.ptr.index %v63 [%v62] strides [1] offset 0 inbounds : !sea.ptr<64>, i64 loc("_10"("firedancer/harness/hpack_huff.c":62:36))
+  %v65 = sea.global @"hp_whi" size 8 align 8 : !sea.ptr<64> loc("firedancer/harness/hpack_huff.c":62:27)
+  %v66 = sea.store %v37[%v65], %v64 inplace align 8 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64> loc("firedancer/harness/hpack_huff.c":62:27)
+  %v67 = sea.const 0 : i64 loc(".not4.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v68 = sea.icmp slt, %v38, %v67 : i64 loc(".not4.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  sea.cond_br %v68, ^bb26(%v6 : !sea.mem<!sea.ptr<64>, i8>), ^bb1 loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb1:
+  %v69 = sea.const 256 : i16 loc("_12"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v70 = sea.icmp ugt, %v44, %v69 : i16 loc("_12"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v71 = sea.const 0 : i16 loc(".not7.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v72 = sea.icmp eq, %v42, %v71 : i16 loc(".not7.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v73 = sea.or %v72, %v70 : i1 loc("or.cond36.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  sea.cond_br %v73, ^bb26(%v6 : !sea.mem<!sea.ptr<64>, i8>), ^bb2 loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb2:
+  %v74 = sea.nondet "nd_ulong" [12] : i64 loc("_14"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v75 = sea.global @"hp_hi" size 8 align 8 : !sea.ptr<64> loc("_15"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v76 = sea.load %v57[%v75] align 8 : !sea.mem<!sea.ptr<64>, i8> -> !sea.ptr<64> loc("_15"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v77 = sea.global @"hp_lo" size 8 align 8 : !sea.ptr<64> loc("_16"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v78 = sea.load %v53[%v77] align 8 : !sea.mem<!sea.ptr<64>, i8> -> !sea.ptr<64> loc("_16"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v79 = sea.ptr.to_int %v76 : !sea.ptr<64> to i64 loc("_17"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v80 = sea.ptr.to_int %v78 : !sea.ptr<64> to i64 loc("_18"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v81 = sea.sub %v79, %v80 : i64 loc("_19"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v82 = sea.icmp ule, %v74, %v81 : i64 loc("_20"("OUT/nghttp2_hd_huffman.c":50:3))
+  sea.assume %v82 loc("OUT/nghttp2_hd_huffman.c":50:3)
+  %v83 = sea.ptr.index %v78 [%v74] strides [1] offset 0 inbounds : !sea.ptr<64>, i64 loc("_21"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v84 = sea.nondet "nd_ulong" [13] : i64 loc("_22"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v85 = sea.global @"hp_whi" size 8 align 8 : !sea.ptr<64> loc("_23"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v86 = sea.load %v66[%v85] align 8 : !sea.mem<!sea.ptr<64>, i8> -> !sea.ptr<64> loc("_23"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v87 = sea.global @"hp_wlo" size 8 align 8 : !sea.ptr<64> loc("_24"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v88 = sea.load %v60[%v87] align 8 : !sea.mem<!sea.ptr<64>, i8> -> !sea.ptr<64> loc("_24"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v89 = sea.ptr.to_int %v86 : !sea.ptr<64> to i64 loc("_25"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v90 = sea.ptr.to_int %v88 : !sea.ptr<64> to i64 loc("_26"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v91 = sea.sub %v89, %v90 : i64 loc("_27"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v92 = sea.icmp ule, %v84, %v91 : i64 loc("_28"("OUT/nghttp2_hd_huffman.c":50:3))
+  sea.assume %v92 loc("OUT/nghttp2_hd_huffman.c":50:3)
+  %v93 = sea.ptr.index %v88 [%v84] strides [1] offset 0 inbounds : !sea.ptr<64>, i64 loc("_29"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v94 = sea.nondet "nd_ushort" [14] : i16 loc("_30"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v95 = sea.global @"hp_lo" size 8 align 8 : !sea.ptr<64> loc("_31"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v96 = sea.load %v53[%v95] align 8 : !sea.mem<!sea.ptr<64>, i8> -> !sea.ptr<64> loc("_31"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v97 = sea.ptr.cmp ult, %v83, %v96 : !sea.ptr<64> loc(".not9.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v98 = sea.ptr.cmp ugt, %v83, %v55 : !sea.ptr<64> loc(".not10.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v99 = sea.const 1 : i1 loc("or.cond37.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v100 = sea.select %v97, %v99, %v98 : i1 loc("or.cond37.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v101 = sea.const 0 : i1 loc("OUT/nghttp2_hd_huffman.c":50:3)
+  sea.cond_br %v100, ^bb8(%v101 : i1), ^bb3 loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb3:
+  %v102 = sea.global @"hp_wlo" size 8 align 8 : !sea.ptr<64> loc("_33"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v103 = sea.load %v60[%v102] align 8 : !sea.mem<!sea.ptr<64>, i8> -> !sea.ptr<64> loc("_33"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v104 = sea.ptr.cmp ult, %v93, %v103 : !sea.ptr<64> loc(".not11.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v105 = sea.const 0 : i1 loc("OUT/nghttp2_hd_huffman.c":50:3)
+  sea.cond_br %v104, ^bb8(%v105 : i1), ^bb4 loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb4:
+  %v106 = sea.ptr.to_int %v93 : !sea.ptr<64> to i64 loc("_35"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v107 = sea.ptr.to_int %v103 : !sea.ptr<64> to i64 loc("_36"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v108 = sea.sub %v106, %v107 : i64 loc("_37"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v109 = sea.ptr.to_int %v83 : !sea.ptr<64> to i64 loc("_38"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v110 = sea.ptr.to_int %v96 : !sea.ptr<64> to i64 loc("_39"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v111 = sea.sub %v109, %v110 : i64 loc("_40"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v112 = sea.const 1 : i64 loc("_41"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v113 = sea.shl %v111, %v112 : i64 loc("_41"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v114 = sea.icmp ugt, %v108, %v113 : i64 loc(".not12.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v115 = sea.const 0 : i1 loc("OUT/nghttp2_hd_huffman.c":50:3)
+  sea.cond_br %v114, ^bb8(%v115 : i1), ^bb5 loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb5:
+  %v116 = sea.const 511 : i16 loc("_43"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v117 = sea.and %v94, %v116 : i16 loc("_43"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v118 = sea.const 256 : i16 loc("_44"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v119 = sea.icmp ugt, %v117, %v118 : i16 loc("_44"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v120 = sea.const 0 : i16 loc(".not13.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v121 = sea.icmp eq, %v94, %v120 : i16 loc(".not13.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v122 = sea.or %v121, %v119 : i1 loc("or.cond38.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v123 = sea.const 0 : i1 loc("OUT/nghttp2_hd_huffman.c":50:3)
+  sea.cond_br %v122, ^bb8(%v123 : i1), ^bb6 loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb6:
+  %v124 = sea.ptr.cmp eq, %v83, %v96 : !sea.ptr<64> loc(".not14.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v125 = sea.const 1 : i1 loc("OUT/nghttp2_hd_huffman.c":50:3)
+  sea.cond_br %v124, ^bb7, ^bb8(%v125 : i1) loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb7:
+  %v126 = sea.load %v50[%v15] align 2 : !sea.mem<!sea.ptr<64>, i8> -> i16 loc("_47"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v127 = sea.icmp eq, %v94, %v126 : i16 loc("_48"("OUT/nghttp2_hd_huffman.c":50:3))
+  sea.br ^bb8(%v127 : i1) loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb8(%v128 : i1):
+  sea.assume %v128 loc("OUT/nghttp2_hd_huffman.c":50:3)
+  %v129 = sea.ptr.cmp eq, %v83, %v55 : !sea.ptr<64> loc(".not15.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  sea.cond_br %v129, ^bb22, ^bb9 loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb9:
+  %v130 = sea.global @"hp_hi" size 8 align 8 : !sea.ptr<64> loc("_51")
+  %v131 = sea.load %v57[%v130] align 8 : !sea.mem<!sea.ptr<64>, i8> -> !sea.ptr<64> loc("_51")
+  %v132 = sea.global @"hp_wlo" size 8 align 8 : !sea.ptr<64> loc("_52")
+  %v133 = sea.load %v60[%v132] align 8 : !sea.mem<!sea.ptr<64>, i8> -> !sea.ptr<64> loc("_52")
+  %v134 = sea.global @"hp_whi" size 8 align 8 : !sea.ptr<64> loc("_53")
+  %v135 = sea.load %v66[%v134] align 8 : !sea.mem<!sea.ptr<64>, i8> -> !sea.ptr<64> loc("_53")
+  %v136 = sea.ptr.to_int %v133 : !sea.ptr<64> to i64 loc("_54")
+  %v137 = sea.ptr.to_int %v96 : !sea.ptr<64> to i64 loc("_55")
+  %v138 = sea.load %v50[%v15] align 2 : !sea.mem<!sea.ptr<64>, i8> -> i16 loc("_56")
+  %v139 = sea.ptr.cmp ugt, %v83, %v131 : !sea.ptr<64> loc(".not20.i.i"("OUT/nghttp2_hd_huffman.c":51:10))
+  %v140 = sea.const 1 : i1 loc("or.cond39.i.i"("OUT/nghttp2_hd_huffman.c":51:10))
+  %v141 = sea.select %v97, %v140, %v139 : i1 loc("or.cond39.i.i"("OUT/nghttp2_hd_huffman.c":51:10))
+  %v142 = sea.ptr.cmp eq, %v131, %v83 : !sea.ptr<64> loc(".not21.i.i"("OUT/nghttp2_hd_huffman.c":51:10))
+  %v143 = sea.const 1 : i1 loc("or.cond40.i.i"("OUT/nghttp2_hd_huffman.c":51:10))
+  %v144 = sea.select %v141, %v143, %v142 : i1 loc("or.cond40.i.i"("OUT/nghttp2_hd_huffman.c":51:10))
+  sea.cond_br %v144, ^bb26(%v6 : !sea.mem<!sea.ptr<64>, i8>), ^bb10 loc("OUT/nghttp2_hd_huffman.c":51:10)
+^bb10:
+  %v145 = sea.ptr.index %v83 [] strides [] offset 1 inbounds : !sea.ptr<64> loc("_58"("OUT/nghttp2_hd_huffman.c":51:35))
+  %v146 = sea.load %v5[%v83] : !sea.mem<!sea.ptr<64>, i8> -> i8 loc("_59"("OUT/nghttp2_hd_huffman.c":51:31))
+  %v147 = sea.const 511 : i16 loc("_60"("OUT/nghttp2_hd_huffman.c":52:28))
+  %v148 = sea.and %v94, %v147 : i16 loc("_60"("OUT/nghttp2_hd_huffman.c":52:28))
+  %v149 = sea.const 257 : i16 loc("_61"("OUT/nghttp2_hd_huffman.c":52:28))
+  %v150 = sea.icmp ult, %v148, %v149 : i16 loc("_61"("OUT/nghttp2_hd_huffman.c":52:28))
+  sea.cond_br %v150, ^bb11, ^bb26(%v6 : !sea.mem<!sea.ptr<64>, i8>) loc("OUT/nghttp2_hd_huffman.c":52:28)
+^bb11:
+  %v151 = sea.zext %v148 : i16 to i64 loc("_63"("OUT/nghttp2_hd_huffman.c":52:10))
+  %v152 = sea.const 4 : i8 loc("_64"("OUT/nghttp2_hd_huffman.c":52:64))
+  %v153 = sea.lshr %v146, %v152 : i8 loc("_64"("OUT/nghttp2_hd_huffman.c":52:64))
+  %v154 = sea.zext %v153 : i8 to i64 loc("_65"("OUT/nghttp2_hd_huffman.c":52:10))
+  %v155 = sea.global @"huff_decode_table" size 16448 align 16 : !sea.ptr<64> loc("_66"("OUT/nghttp2_hd_huffman.c":52:10))
+  %v156 = sea.ptr.index %v155 [%v151, %v154] strides [64, 4] offset 0 inbounds : !sea.ptr<64>, i64, i64 loc("_66"("OUT/nghttp2_hd_huffman.c":52:10))
+  %v157 = sea.load %v7[%v156] align 2 : !sea.mem<!sea.ptr<64>, i8> -> i16 loc("_67"("OUT/nghttp2_hd_huffman.c":52:71))
+  %v158 = sea.const 511 : i16 loc("_68"("OUT/nghttp2_hd_huffman.c":52:71))
+  %v159 = sea.and %v157, %v158 : i16 loc("_68"("OUT/nghttp2_hd_huffman.c":52:71))
+  %v160 = sea.const 257 : i16 loc("_69"("OUT/nghttp2_hd_huffman.c":52:71))
+  %v161 = sea.icmp ult, %v159, %v160 : i16 loc("_69"("OUT/nghttp2_hd_huffman.c":52:71))
+  %v162 = sea.const 0 : i16 loc("_70")
+  %v163 = sea.icmp ne, %v157, %v162 : i16 loc("_70")
+  %v164 = sea.and %v163, %v161 : i1 loc("spec.select"("OUT/nghttp2_hd_huffman.c":52:71))
+  sea.assume %v164 loc("OUT/nghttp2_hd_huffman.c":52:71)
+  %v165 = sea.ptr.index %v93 [] strides [] offset 1 inbounds : !sea.ptr<64> loc("_71"("OUT/nghttp2_hd_huffman.c":53:15))
+  %v166 = sea.const 0 : i8 loc("OUT/nghttp2_hd_huffman.c":53:18)
+  %v167 = sea.store %v6[%v93], %v166 inplace : !sea.mem<!sea.ptr<64>, i8>, i8 loc("OUT/nghttp2_hd_huffman.c":53:18)
+  %v168 = sea.const 65535 : i16 loc(".not22.i.i"("OUT/nghttp2_hd_huffman.c":53:37))
+  %v169 = sea.icmp sgt, %v157, %v168 : i16 loc(".not22.i.i"("OUT/nghttp2_hd_huffman.c":53:37))
+  sea.cond_br %v169, ^bb14(%v167, %v165 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>), ^bb12 loc("OUT/nghttp2_hd_huffman.c":53:27)
+^bb12:
+  %v170 = sea.ptr.cmp uge, %v165, %v133 : !sea.ptr<64> loc(".not23.i.i"("OUT/nghttp2_hd_huffman.c":54:7))
+  %v171 = sea.ptr.cmp ugt, %v135, %v165 : !sea.ptr<64> loc("or.cond.not"("OUT/nghttp2_hd_huffman.c":54:7))
+  %v172 = sea.const 0 : i1 loc("or.cond"("OUT/nghttp2_hd_huffman.c":54:7))
+  %v173 = sea.select %v170, %v171, %v172 : i1 loc("or.cond"("OUT/nghttp2_hd_huffman.c":54:7))
+  sea.cond_br %v173, ^bb13, ^bb26(%v167 : !sea.mem<!sea.ptr<64>, i8>) loc("OUT/nghttp2_hd_huffman.c":54:7)
+^bb13:
+  %v174 = sea.global @"huff_decode_table" size 16448 align 16 : !sea.ptr<64> loc("_74"("OUT/nghttp2_hd_huffman.c":54:52))
+  %v175 = sea.ptr.index %v174 [%v151, %v154] strides [64, 4] offset 2 inbounds : !sea.ptr<64>, i64, i64 loc("_74"("OUT/nghttp2_hd_huffman.c":54:52))
+  %v176 = sea.load %v7[%v175] align 2 : !sea.mem<!sea.ptr<64>, i8> -> i8 loc("_75"("OUT/nghttp2_hd_huffman.c":54:52))
+  %v177 = sea.ptr.index %v93 [] strides [] offset 2 inbounds : !sea.ptr<64> loc("_76"("OUT/nghttp2_hd_huffman.c":54:44))
+  %v178 = sea.store %v167[%v165], %v176 inplace : !sea.mem<!sea.ptr<64>, i8>, i8 loc("OUT/nghttp2_hd_huffman.c":54:47)
+  sea.br ^bb14(%v178, %v177 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>) loc("OUT/nghttp2_hd_huffman.c":55:5)
+^bb14(%v179 : !sea.mem<!sea.ptr<64>, i8>, %v180 : !sea.ptr<64>):
+  sea.cond_br %v161, ^bb15, ^bb26(%v179 : !sea.mem<!sea.ptr<64>, i8>) loc("OUT/nghttp2_hd_huffman.c":57:28)
+^bb15:
+  %v181 = sea.zext %v159 : i16 to i64 loc("_79"("OUT/nghttp2_hd_huffman.c":57:10))
+  %v182 = sea.const 15 : i8 loc("_80"("OUT/nghttp2_hd_huffman.c":57:64))
+  %v183 = sea.and %v146, %v182 : i8 loc("_80"("OUT/nghttp2_hd_huffman.c":57:64))
+  %v184 = sea.zext %v183 : i8 to i64 loc("_81"("OUT/nghttp2_hd_huffman.c":57:10))
+  %v185 = sea.global @"huff_decode_table" size 16448 align 16 : !sea.ptr<64> loc("_82"("OUT/nghttp2_hd_huffman.c":57:10))
+  %v186 = sea.ptr.index %v185 [%v181, %v184] strides [64, 4] offset 0 inbounds : !sea.ptr<64>, i64, i64 loc("_82"("OUT/nghttp2_hd_huffman.c":57:10))
+  %v187 = sea.load %v7[%v186] align 2 : !sea.mem<!sea.ptr<64>, i8> -> i16 loc("_83"("OUT/nghttp2_hd_huffman.c":57:72))
+  %v188 = sea.const 511 : i16 loc("_84"("OUT/nghttp2_hd_huffman.c":57:72))
+  %v189 = sea.and %v187, %v188 : i16 loc("_84"("OUT/nghttp2_hd_huffman.c":57:72))
+  %v190 = sea.const 257 : i16 loc("_85"("OUT/nghttp2_hd_huffman.c":57:72))
+  %v191 = sea.icmp ult, %v189, %v190 : i16 loc("_85"("OUT/nghttp2_hd_huffman.c":57:72))
+  %v192 = sea.const 0 : i16 loc("_86")
+  %v193 = sea.icmp ne, %v187, %v192 : i16 loc("_86")
+  %v194 = sea.and %v193, %v191 : i1 loc("spec.select23"("OUT/nghttp2_hd_huffman.c":57:72))
+  sea.assume %v194 loc("OUT/nghttp2_hd_huffman.c":57:72)
+  %v195 = sea.const 65535 : i16 loc(".not26.i.i"("OUT/nghttp2_hd_huffman.c":58:19))
+  %v196 = sea.icmp sgt, %v187, %v195 : i16 loc(".not26.i.i"("OUT/nghttp2_hd_huffman.c":58:19))
+  sea.cond_br %v196, ^bb18(%v179, %v180 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>), ^bb16 loc("OUT/nghttp2_hd_huffman.c":58:9)
+^bb16:
+  %v197 = sea.ptr.cmp uge, %v180, %v133 : !sea.ptr<64> loc(".not27.i.i"("OUT/nghttp2_hd_huffman.c":59:7))
+  %v198 = sea.ptr.cmp ugt, %v135, %v180 : !sea.ptr<64> loc("or.cond24.not"("OUT/nghttp2_hd_huffman.c":59:7))
+  %v199 = sea.const 0 : i1 loc("or.cond31"("OUT/nghttp2_hd_huffman.c":59:7))
+  %v200 = sea.select %v197, %v198, %v199 : i1 loc("or.cond31"("OUT/nghttp2_hd_huffman.c":59:7))
+  sea.cond_br %v200, ^bb17, ^bb26(%v179 : !sea.mem<!sea.ptr<64>, i8>) loc("OUT/nghttp2_hd_huffman.c":59:7)
+^bb17:
+  %v201 = sea.global @"huff_decode_table" size 16448 align 16 : !sea.ptr<64> loc("_89"("OUT/nghttp2_hd_huffman.c":59:52))
+  %v202 = sea.ptr.index %v201 [%v181, %v184] strides [64, 4] offset 2 inbounds : !sea.ptr<64>, i64, i64 loc("_89"("OUT/nghttp2_hd_huffman.c":59:52))
+  %v203 = sea.load %v7[%v202] align 2 : !sea.mem<!sea.ptr<64>, i8> -> i8 loc("_90"("OUT/nghttp2_hd_huffman.c":59:52))
+  %v204 = sea.ptr.index %v180 [] strides [] offset 1 inbounds : !sea.ptr<64> loc("_91"("OUT/nghttp2_hd_huffman.c":59:44))
+  %v205 = sea.store %v179[%v180], %v203 inplace : !sea.mem<!sea.ptr<64>, i8>, i8 loc("OUT/nghttp2_hd_huffman.c":59:47)
+  sea.br ^bb18(%v205, %v204 : !sea.mem<!sea.ptr<64>, i8>, !sea.ptr<64>) loc("OUT/nghttp2_hd_huffman.c":60:5)
+^bb18(%v206 : !sea.mem<!sea.ptr<64>, i8>, %v207 : !sea.ptr<64>):
+  %v208 = sea.ptr.cmp ult, %v145, %v96 : !sea.ptr<64> loc(".not30.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v209 = sea.ptr.cmp ugt, %v145, %v55 : !sea.ptr<64> loc(".not31.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v210 = sea.const 1 : i1 loc("or.cond41.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v211 = sea.select %v208, %v210, %v209 : i1 loc("or.cond41.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v212 = sea.ptr.cmp ult, %v207, %v133 : !sea.ptr<64> loc(".not32.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v213 = sea.const 1 : i1 loc("or.cond37"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v214 = sea.select %v211, %v213, %v212 : i1 loc("or.cond37"("OUT/nghttp2_hd_huffman.c":50:3))
+  sea.cond_br %v214, ^bb26(%v206 : !sea.mem<!sea.ptr<64>, i8>), ^bb19 loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb19:
+  %v215 = sea.ptr.to_int %v207 : !sea.ptr<64> to i64 loc("_94"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v216 = sea.sub %v215, %v136 : i64 loc("_95"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v217 = sea.ptr.to_int %v145 : !sea.ptr<64> to i64 loc("_96"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v218 = sea.sub %v217, %v137 : i64 loc("_97"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v219 = sea.const 1 : i64 loc("_98"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v220 = sea.shl %v218, %v219 : i64 loc("_98"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v221 = sea.icmp ugt, %v216, %v220 : i64 loc(".not33.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v222 = sea.const 1 : i1 loc(".not"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v223 = sea.xor %v191, %v222 : i1 loc(".not"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v224 = sea.const 1 : i1 loc("brmerge"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v225 = sea.select %v221, %v224, %v223 : i1 loc("brmerge"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v226 = sea.const 0 : i16 loc(".not34.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v227 = sea.icmp eq, %v187, %v226 : i16 loc(".not34.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v228 = sea.const 1 : i1 loc("or.cond25"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v229 = sea.select %v225, %v228, %v227 : i1 loc("or.cond25"("OUT/nghttp2_hd_huffman.c":50:3))
+  sea.cond_br %v229, ^bb26(%v206 : !sea.mem<!sea.ptr<64>, i8>), ^bb20 loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb20:
+  %v230 = sea.ptr.cmp ne, %v145, %v96 : !sea.ptr<64> loc(".not35.i.i"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v231 = sea.icmp eq, %v187, %v138 : i16 loc("_100"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v232 = sea.const 1 : i1 loc("or.cond27"("OUT/nghttp2_hd_huffman.c":50:3))
+  %v233 = sea.select %v230, %v232, %v231 : i1 loc("or.cond27"("OUT/nghttp2_hd_huffman.c":50:3))
+  sea.cond_br %v233, ^bb21, ^bb26(%v206 : !sea.mem<!sea.ptr<64>, i8>) loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb21:
+  %v234 = sea.const 0 : i1 loc("OUT/nghttp2_hd_huffman.c":50:3)
+  sea.assume %v234 loc("OUT/nghttp2_hd_huffman.c":50:3)
+  sea.br ^bb23(%v206, %v215, %v207, %v187 : !sea.mem<!sea.ptr<64>, i8>, i64, !sea.ptr<64>, i16) loc("OUT/nghttp2_hd_huffman.c":63:20)
+^bb22:
+  %v235 = sea.ptr.to_int %v93 : !sea.ptr<64> to i64 loc(".pre"("firedancer/harness/hpack_huff.c":66:3))
+  sea.br ^bb23(%v6, %v235, %v93, %v94 : !sea.mem<!sea.ptr<64>, i8>, i64, !sea.ptr<64>, i16) loc("OUT/nghttp2_hd_huffman.c":50:3)
+^bb23(%v236 : !sea.mem<!sea.ptr<64>, i8>, %v237 : i64, %v238 : !sea.ptr<64>, %v239 : i16):
+  %v240 = sea.global @"hp_out" size 8192 align 16 : !sea.ptr<64> loc(".not.i"("firedancer/harness/hpack_huff.c":66:3))
+  %v241 = sea.ptr.cmp ult, %v238, %v240 : !sea.ptr<64> loc(".not.i"("firedancer/harness/hpack_huff.c":66:3))
+  %v242 = sea.global @"hp_out" size 8192 align 16 : !sea.ptr<64> loc("_101")
+  %v243 = sea.ptr.to_int %v242 : !sea.ptr<64> to i64 loc("_101")
+  %v244 = sea.sub %v237, %v243 : i64 loc("_102"("firedancer/harness/hpack_huff.c":66:3))
+  %v245 = sea.icmp ugt, %v244, %v62 : i64 loc(".not1.i"("firedancer/harness/hpack_huff.c":66:3))
+  %v246 = sea.const 1 : i1 loc("or.cond30"("firedancer/harness/hpack_huff.c":66:3))
+  %v247 = sea.select %v241, %v246, %v245 : i1 loc("or.cond30"("firedancer/harness/hpack_huff.c":66:3))
+  sea.cond_br %v247, ^bb26(%v236 : !sea.mem<!sea.ptr<64>, i8>), ^bb24 loc("firedancer/harness/hpack_huff.c":66:3)
+^bb24:
+  %v248 = sea.const 511 : i16 loc("_104"("firedancer/harness/hpack_huff.c":67:3))
+  %v249 = sea.and %v239, %v248 : i16 loc("_104"("firedancer/harness/hpack_huff.c":67:3))
+  %v250 = sea.const 256 : i16 loc("_105"("firedancer/harness/hpack_huff.c":67:3))
+  %v251 = sea.icmp ugt, %v249, %v250 : i16 loc("_105"("firedancer/harness/hpack_huff.c":67:3))
+  %v252 = sea.const 0 : i16 loc(".not2.i"("firedancer/harness/hpack_huff.c":67:3))
+  %v253 = sea.icmp eq, %v239, %v252 : i16 loc(".not2.i"("firedancer/harness/hpack_huff.c":67:3))
+  %v254 = sea.or %v253, %v251 : i1 loc("or.cond.i"("firedancer/harness/hpack_huff.c":67:3))
+  sea.cond_br %v254, ^bb26(%v236 : !sea.mem<!sea.ptr<64>, i8>), ^bb25 loc("firedancer/harness/hpack_huff.c":67:3)
+^bb25:
+  %v255 = sea.const 0 : i64 loc(".not4.i"("firedancer/harness/hpack_huff.c":69:3))
+  %v256 = sea.icmp ne, %v38, %v255 : i64 loc(".not4.i"("firedancer/harness/hpack_huff.c":69:3))
+  %v257 = sea.icmp eq, %v239, %v42 : i16 loc("_107"("firedancer/harness/hpack_huff.c":69:3))
+  %v258 = sea.const 1 : i1 loc("or.cond6.i"("firedancer/harness/hpack_huff.c":69:3))
+  %v259 = sea.select %v256, %v258, %v257 : i1 loc("or.cond6.i"("firedancer/harness/hpack_huff.c":69:3))
+  %v260 = sea.const 1 : i1 loc("firedancer/harness/hpack_huff.c":69:3)
+  %v261 = sea.xor %v259, %v260 : i1 loc("firedancer/harness/hpack_huff.c":69:3)
+  sea.assume %v261 loc("firedancer/harness/hpack_huff.c":69:3)
+  sea.br ^bb26(%v236 : !sea.mem<!sea.ptr<64>, i8>) loc("firedancer/harness/hpack_huff.c":69:3)
+^bb26(%v262 : !sea.mem<!sea.ptr<64>, i8>):
+  sea.br ^bb27
+^bb27:
+  %v263 = sea.const 0 : i1
+  sea.assert %v263
+  sea.halt
+}

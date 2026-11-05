@@ -1,0 +1,2419 @@
+# Benchmark family manifest (sea-mlir utils/bench.py; docs/Benchmarks.md in sea-mlir).
+# expected: sat | unsat | unknown-ok | pending (not run yet); tier: smoke (<5 s) | quick (<60 s) | full (<900 s) | hard
+# (tracked, not gated); time: wall seconds when established; args: per-job sea-vc args
+# appended to the configuration's. counters: {<stat>: {max | min | exact: N, why, seeded}} completeness bounds
+# (defaults.counters, counter-rules [{jobs: regex, counters, why}], job counters; a bound without `seeded`
+# is deliberate: establish never changes it).
+family: firedancer
+license: Apache-2.0 (Firedancer); HPACK jobs also contain nghttp2 Huffman code (MIT), see NOTICE
+description: 'Firedancer proofs: FD-FRAG (fd_tpu_reasm fragment/cancel, per K), FD-FRAG inductive step, TX-PARSE (fd_txn_parse,
+  bounded and proof mode), HPACK (fd_hpack / nghttp2 Huffman), H2FC (h2 / gRPC flow control step), h2fc SeaM blowup repro
+  inputs'
+sources:
+  firedancer: https://github.com/firedancer-io/firedancer 37c658197b29deada95ea95a1afb04f7baea28fa
+  seahorn: seahorn sea-mlir branch 1312254b1142e781ff5eda66a5c7255fd47a1e2c, profile share/seahorn/profiles/sea-mlir-export.yaml
+  clang: Ubuntu clang version 18.1.3 (1ubuntu1)
+defaults:
+  args: [--lower, --seam, --widen-memory=4]
+  timeout: 900
+  mem: 16384
+established:
+  sea-mlir:
+    rev: 6d6833cb8e6aea70fffbf231c2e681d07bcd9204
+    branch: bench-gate
+    dirty: false
+  sea-vc-sha256: 6e679ef1bdbbd31114a42c81e224f7e69ebdabb531198b96e39b11acc47a3ac6
+  date: '2026-11-04T17:49:33'
+  par: 4
+  config:
+    args: [--lower, --seam, --widen-memory=4]
+    solver: null
+    timeout: 900
+    mem: 16384
+  note: '2026-11-04: runs of an earlier establish (8 parallel, 24 GB cap) reused for jobs that finished within 30 s
+    or did not finish; all others ran at 4 parallel, 16 GB cap (shared machine). Gates use the manifest cap (16 GB).'
+jobs:
+  frag-mut-bounds-1-K1:
+    expected: unknown-ok
+    tier: hard
+    time: 216.3
+    harness-expected: sat
+    tags: [mutant]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    mutant: mut-bounds-1
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+        MUT: mut-bounds-1
+      defines: [-DK=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 8a6304e21883609cf01cfd1fe1749ae67dd855d86a9aad72d9f345afdd951d35
+    established: memout
+  frag-mut-bounds-hdr-K1:
+    expected: unknown-ok
+    tier: hard
+    time: 212.59
+    harness-expected: sat
+    tags: [mutant]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    mutant: mut-bounds-hdr
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+        MUT: mut-bounds-hdr
+      defines: [-DK=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: d7b12ca9c33b76b6cbd2d94d7b36705b69e4e0de5b42d2de7d07572507e7b3f8
+    established: memout
+  frag-mut-cancel-nomap-K1:
+    expected: unknown-ok
+    tier: hard
+    time: 260.39
+    harness-expected: sat
+    tags: [mutant]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    mutant: mut-cancel-nomap
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+        MUT: mut-cancel-nomap
+      defines: [-DK=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: b5d0135497caa77dd0235445040483281080d111f24decb878fedcbc8e65440e
+    established: unknown
+  frag-mut-trim-noadvance-K1:
+    expected: unknown-ok
+    tier: hard
+    time: 202.96
+    harness-expected: unsat
+    tags: [mutant]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    mutant: mut-trim-noadvance
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+        MUT: mut-trim-noadvance
+      defines: [-DK=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 3435f3e0037a1e2e3315294c7a1fcd4b28625aaa5aaad95c7aefa495ecba02c8
+    established: memout
+  frag-mut-trim-noadvance-K2:
+    expected: unknown-ok
+    tier: hard
+    time: 208.1
+    harness-expected: sat
+    tags: [mutant]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    mutant: mut-trim-noadvance
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+        MUT: mut-trim-noadvance
+      defines: [-DK=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 11d5199c4a659414109c301e26272f37aae18f319dfa5fc9ca855bdc6878e1e3
+    established: memout
+  frag-reach-busy-K1:
+    expected: unknown-ok
+    tier: hard
+    time: 204.91
+    harness-expected: sat
+    tags: [reach]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+      defines: [-DK=1, -DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: f881f6ab7fde0cd162b5c46aa6955ca80e590dec94a9a7ff7ccea061a7f2dc3b
+    established: unknown
+  frag-reach-errsz-K1:
+    expected: unknown-ok
+    tier: hard
+    time: 208.86
+    harness-expected: sat
+    tags: [reach]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+      defines: [-DK=1, -DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 19c9459bfa10043b64dd29f7a64bd0682c3bf62bf14812075561bf0a9142d24d
+    established: unknown
+  frag-reach-trim-K1:
+    expected: unknown-ok
+    tier: hard
+    time: 288.53
+    harness-expected: unsat
+    tags: [proof]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+      defines: [-DK=1, -DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 63d6d363143de75a1432768407cf8798c2235570a992b22cfd489d10193af6b5
+    established: unknown
+  frag-reach-trim-K2:
+    expected: unknown-ok
+    tier: hard
+    time: 909.77
+    harness-expected: sat
+    tags: [reach]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+      defines: [-DK=2, -DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 1b25517aa09b0de7941318a084534e60d6cee6e4dc81db4840e4361207c0465f
+    established: timeout
+  frag-revert-071c0006-K1:
+    expected: unknown-ok
+    tier: hard
+    time: 242.66
+    harness-expected: sat
+    tags: [mutant]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    mutant: revert-071c0006
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+        MUT: revert-071c0006
+      defines: [-DK=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 3f2d73e5dbb1652ff47b760d7d9ee175c35e39bc511b06707bf994620f6552bd
+    established: memout
+  frag-spec-K1:
+    expected: unknown-ok
+    tier: hard
+    time: 218.43
+    harness-expected: unsat
+    tags: [proof]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+      defines: [-DK=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 4c96e3fa3ba42b6b942ee4e42581a849554dc54ea55630db7fadebec4d84eb5b
+    established: memout
+  frag-spec-K2:
+    expected: unknown-ok
+    tier: hard
+    time: 214.94
+    harness-expected: unsat
+    tags: [proof]
+    group: FD-FRAG
+    args: [--ptr-mode=address]
+    export:
+      harness: harness/reasm_frag.c
+      sweep: sweep.py
+      script: run_frag.sh
+      env:
+        MOCKS: no-orig
+      defines: [-DK=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: cd0879003fe6a55ad6759ba696e50477adf0c67fd312e6ac27c316a076c25fc9
+    established: memout
+  h2fc-blowup-rx-end:
+    expected: unknown-ok
+    tier: hard
+    time: 911.33
+    harness-expected: sat
+    tags: [blowup-regression]
+    group: H2FC
+    export:
+      copied-from: h2fc-ablation/rx-end.mlir
+      note: old export (verify-c-common sea.yaml settings, run_h2fc.sh before the profile)
+    sha256: bee506e87152dadf8babb60317a1c2aba32085c9f40ef0ada313282424f17496
+    established: timeout
+  h2fc-blowup-rx-proof:
+    expected: unknown-ok
+    tier: hard
+    time: 913.17
+    harness-expected: unsat
+    tags: [blowup-regression]
+    group: H2FC
+    export:
+      copied-from: h2fc-ablation/rx-proof.mlir
+      note: old export (verify-c-common sea.yaml settings, run_h2fc.sh before the profile)
+    sha256: 3dc56045de52fcf90172f4ff0f8b908257e2be7cd1039b8ddc422a1acd1dd0f7
+    established: timeout
+  h2fc-blowup-rx-proof-nosplit:
+    expected: unknown-ok
+    tier: hard
+    time: 911.27
+    harness-expected: unsat
+    tags: [blowup-regression]
+    group: H2FC
+    export:
+      copied-from: h2fc-ablation/rx-proof-nosplit.mlir
+      note: old export (verify-c-common sea.yaml settings, run_h2fc.sh before the profile)
+    sha256: 43e637be9caed51e8e06ddb725ef9a4e1cce5b2426bf4f8776f19144ded07f9a
+    established: timeout
+  h2fc-blowup-rx-proof-ns1:
+    expected: unknown-ok
+    tier: hard
+    time: 910.83
+    harness-expected: unsat
+    tags: [blowup-regression]
+    group: H2FC
+    export:
+      copied-from: h2fc-ablation/rx-proof-ns1.mlir
+      note: old export (verify-c-common sea.yaml settings, run_h2fc.sh before the profile)
+    sha256: 9ba626a7a62101984a9281cd9cbdbda3e33b3e8885befa940f80face49b42e9a
+    established: timeout
+  h2fc-blowup-rx-proof-off0:
+    expected: unknown-ok
+    tier: hard
+    time: 912.26
+    harness-expected: unsat
+    tags: [blowup-regression]
+    group: H2FC
+    export:
+      copied-from: h2fc-ablation/rx-proof-off0.mlir
+      note: old export (verify-c-common sea.yaml settings, run_h2fc.sh before the profile)
+    sha256: 043d06dd827153e2a4c4204f632c1b6e7912ddec927782f4229b839b0db34a21
+    established: timeout
+  h2fc-blowup-tx-proof-overlay:
+    expected: unsat
+    tier: full
+    time: 146.66
+    harness-expected: unsat
+    tags: [blowup-regression]
+    group: H2FC
+    export:
+      copied-from: h2fc-ablation/tx-proof-overlay.mlir
+      note: old export (verify-c-common sea.yaml settings, run_h2fc.sh before the profile)
+    sha256: 45334d1a9538871c3d1fde96e218acffe1611318ad34a72cf1e7995a15aa05e1
+    established: unsat
+  h2fc-blowup-tx-reach-ring:
+    expected: unknown-ok
+    tier: hard
+    time: 662.62
+    harness-expected: null
+    tags: [blowup-regression]
+    group: H2FC
+    export:
+      copied-from: h2fc-ablation/tx-reach-ring.mlir
+      note: old export (verify-c-common sea.yaml settings, run_h2fc.sh before the profile)
+    sha256: b2624854908e8c098148e95e0ef7ebd46870fa13c3f7a29c9bd5d96a276bb10e
+    established: memout
+  h2fc-blowup-tx-reach-ring-off0:
+    expected: unknown-ok
+    tier: hard
+    time: 679.51
+    harness-expected: null
+    tags: [blowup-regression]
+    group: H2FC
+    export:
+      copied-from: h2fc-ablation/tx-reach-ring-off0.mlir
+      note: old export (verify-c-common sea.yaml settings, run_h2fc.sh before the profile)
+    sha256: 37178f5a10f67c8ff8e160aef827f3d23fdcb04b1266157ea2bb4f272cd2da3a
+    established: memout
+  h2fc-open-proof:
+    expected: unsat
+    tier: smoke
+    time: 2.02
+    harness-expected: unsat
+    tags: [proof]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=8]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 4e67f06a1858098993423935171e293ee73c0f2abd0e3d6b806190f9782a5161
+    established: unsat
+  h2fc-refill-conn-proof:
+    expected: unsat
+    tier: smoke
+    time: 1.84
+    harness-expected: unsat
+    tags: [proof]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=6]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 4626ba297bfb8b570ad635f53dde08a5b3a5491c2ab31e287b2abba8c0f1b3cf
+    established: unsat
+  h2fc-refill-conn-reach1:
+    expected: sat
+    tier: smoke
+    time: 1.32
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=6, -DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 98ad65f7a658f7768455f909f7a3ac719842a68e7bba181fb5b3f8b4178f84c3
+    established: sat
+  h2fc-refill-stream-proof:
+    expected: unsat
+    tier: quick
+    time: 5.59
+    harness-expected: unsat
+    tags: [proof]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=7]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c1f41e6e73de3513d4af1ac3260176115af8f5445aff7b32bce3749a7c41ee7b
+    established: unsat
+  h2fc-refill-stream-reach1:
+    expected: sat
+    tier: smoke
+    time: 1.5
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=7, -DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 01a3b9a1d4d5e4d0fce066f1eeb3145de0e2ccfcea42f51e24489d8e35d3789e
+    established: sat
+  h2fc-rx-data-proof:
+    expected: unknown-ok
+    tier: hard
+    time: 169.49
+    harness-expected: unsat
+    tags: [proof]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=5]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 2245ecea616159567e1fa19a707d613bf86870f94ed47d64539b3eda84bc2488
+    established: unknown
+  h2fc-rx-data-reach1:
+    expected: unknown-ok
+    tier: hard
+    time: 179.47
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=5, -DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: bf38cd6aef59157e7e1cac15f92629c61f229b28ccc988f42b94686ea8bd84bb
+    established: unknown
+  h2fc-rx-data-reach2:
+    expected: unknown-ok
+    tier: hard
+    time: 166.15
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=5, -DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: d70ab992a7fd4039dbd27c4de2c998601a77b2af00356d6401fa85fdb087dd58
+    established: unknown
+  h2fc-rx-data-reach3:
+    expected: unknown-ok
+    tier: hard
+    time: 161.32
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=5, -DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: e4709aac5334a720980704b0edd60a3fee0eba3b33406e3a3fcfd65d3514685c
+    established: unknown
+  h2fc-rx-data-reach4:
+    expected: unknown-ok
+    tier: hard
+    time: 161.23
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=5, -DCLAIM=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: f60a9ce36a4128fe4e0e88c5b5dd09009ef1e9878b5776db974f92b159af0b9d
+    established: unknown
+  h2fc-rx-data-reach5:
+    expected: unknown-ok
+    tier: hard
+    time: 159.67
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=5, -DCLAIM=5]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: a1ed0d77008705d92f679ec4f503fcc4c7d8c921a2c13af056c33d8ab0743a2e
+    established: unknown
+  h2fc-rx-data-reach6:
+    expected: unknown-ok
+    tier: hard
+    time: 172.6
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=5, -DCLAIM=6]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 532f567ecde5a39918be5a21dae9e687e460281443e98ab0e955629f0d4d50ff
+    established: unknown
+  h2fc-rx-data-revert-791176436:
+    expected: unknown-ok
+    tier: hard
+    time: 176.32
+    harness-expected: sat
+    tags: [mutant]
+    group: H2FC
+    mutant: fd_h2_conn.c:h2-data-791
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+        MUT: fd_h2_conn.c:h2-data-791
+      defines: [-DOP=5]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 944c92bae219426478757e1af5fed7bd8d1ade6bb2d816a766ad9a35af282630
+    established: unknown
+  h2fc-settings-mut-no-debt:
+    expected: sat
+    tier: smoke
+    time: 4.75
+    harness-expected: sat
+    tags: [mutant]
+    group: H2FC
+    mutant: grpc_fc_cb.c:grpc-no-debt
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+        MUT: grpc_fc_cb.c:grpc-no-debt
+      defines: [-DOP=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 6607bb1cf661a7d74759d751bd7c970335451bf082527f64528ab1e8b425d4eb
+    established: sat
+  h2fc-settings-proof:
+    expected: unsat
+    tier: full
+    time: 296.06
+    harness-expected: unsat
+    tags: [proof]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: a9c2ee4514c563acbdd0454f4946de4286e6764830b758353681691af6626ffc
+    established: unsat
+  h2fc-settings-reach1:
+    expected: sat
+    tier: quick
+    time: 10.08
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=1, -DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 0b7d217da431466386247ae9513fedb6803252ca237d6eb6190dcb5e0e03b706
+    established: sat
+  h2fc-settings-reach2:
+    expected: sat
+    tier: smoke
+    time: 1.94
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=1, -DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 18307087df3dedc8198cbfc2072ed4d096f6bc5cf891febcfed54e9ee61b8675
+    established: sat
+  h2fc-settings-revert-14554f619:
+    expected: sat
+    tier: smoke
+    time: 1.48
+    harness-expected: sat
+    tags: [mutant]
+    group: H2FC
+    mutant: grpc_fc_cb.c:grpc-no-initial-update
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+        MUT: grpc_fc_cb.c:grpc-no-initial-update
+      defines: [-DOP=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 0e566354da9fa333d1dfeeb37382f0b08d34cfacc4c4067afea6eed5fca0965c
+    established: sat
+  h2fc-tx-mut-quota:
+    expected: sat
+    tier: quick
+    time: 21.88
+    harness-expected: sat
+    tags: [mutant]
+    group: H2FC
+    mutant: fd_h2_tx.c:h2-tx-quota
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+        MUT: fd_h2_tx.c:h2-tx-quota
+      defines: [-DOP=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 20a50e871244c04a87b187b0e647e19d22326370e6fdb2b17c6f539f86f3f376
+    established: sat
+  h2fc-tx-proof:
+    expected: unsat
+    tier: full
+    time: 239.14
+    harness-expected: unsat
+    tags: [proof]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 0b0d27da33aeadab5d913029c34bd6787ef6b46e931ec82b96bd1f42714b38dc
+    established: unsat
+  h2fc-tx-reach1:
+    expected: sat
+    tier: quick
+    time: 27.1
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=4, -DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 3b5eb5f9c8f12f55f6d0567d738e45e62784d3ceef8b50c22d7a0f9715c392cc
+    established: sat
+  h2fc-tx-reach2:
+    expected: sat
+    tier: full
+    time: 79.18
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=4, -DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 7c2adbcda8ff25af90076b6e9ce7118f0adeafc6504e2f1560caf1d86843de56
+    established: sat
+  h2fc-wu-conn-proof:
+    expected: unsat
+    tier: smoke
+    time: 0.87
+    harness-expected: unsat
+    tags: [proof]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: aad045627c99fb955a8c8b0351a2bbe73de54d829227a50847c9053b82a9dc25
+    established: unsat
+  h2fc-wu-conn-reach1:
+    expected: sat
+    tier: smoke
+    time: 0.48
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=2, -DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 47f2d8757ab68df2721f1e643b55b353a35d7d745603f2d37ae4adbd9ca57f7f
+    established: sat
+  h2fc-wu-conn-revert-5f588f335:
+    expected: sat
+    tier: smoke
+    time: 0.74
+    harness-expected: sat
+    tags: [mutant]
+    group: H2FC
+    mutant: fd_h2_conn.c:h2-wu-conn-31
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+        MUT: fd_h2_conn.c:h2-wu-conn-31
+      defines: [-DOP=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c3e512919a97f51c1007c8013fc3427ccf1efd19a3a5da5f9febce39af5d0745
+    established: sat
+  h2fc-wu-stream-mut-no-repay:
+    expected: sat
+    tier: smoke
+    time: 1.6
+    harness-expected: sat
+    tags: [mutant]
+    group: H2FC
+    mutant: grpc_fc_cb.c:grpc-no-repay
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+        MUT: grpc_fc_cb.c:grpc-no-repay
+      defines: [-DOP=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 7f8b827325d22e48b6aeec06c36ba58a31b22fe80c99dc99c162b5e79ad6fa19
+    established: sat
+  h2fc-wu-stream-proof:
+    expected: unsat
+    tier: quick
+    time: 13.6
+    harness-expected: unsat
+    tags: [proof]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: f1d0d29fc8bfb1e71a12c0f456b01cc912470e96a07a4f6a1a732095dd69b046
+    established: unsat
+  h2fc-wu-stream-reach1:
+    expected: sat
+    tier: smoke
+    time: 3.93
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=3, -DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 1d2b42227eb17b893a154f2d7918f2a4280c444038d436899860f9e9150de9e1
+    established: sat
+  h2fc-wu-stream-reach2:
+    expected: sat
+    tier: smoke
+    time: 2.0
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=3, -DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 1700f8a07fec2858c154d95e400349a552a90d0ad6d2a0d7dd894d0169e82a96
+    established: sat
+  h2fc-wu-stream-reach3:
+    expected: sat
+    tier: smoke
+    time: 4.88
+    harness-expected: sat
+    tags: [reach]
+    group: H2FC
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+      defines: [-DOP=3, -DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: d104d705aad06542310048ad00a1e3192486ad32d18aa3bf949a5e640efe0482
+    established: sat
+  h2fc-wu-stream-revert-5f588f335:
+    expected: sat
+    tier: smoke
+    time: 2.16
+    harness-expected: sat
+    tags: [mutant, canary]
+    group: H2FC
+    mutant: fd_h2_conn.c:h2-wu-stream-31
+    export:
+      harness: harness/h2fc_step.c
+      sweep: h2fc_sweep.py
+      script: run_h2fc.sh
+      env:
+        SRC: h2fc_step.c
+        MUT: fd_h2_conn.c:h2-wu-stream-31
+      defines: [-DOP=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 2ed518bf5027d9eb00c33ab77ea56a3170a5ab14ca23243397e0dc4143aecc73
+    established: sat
+    counters:
+      vc.ackermann-constraints:
+        max: 13
+        seeded: 2026-11-04 sea-vc 1615517919f1
+      vc.ackermann-reads:
+        max: 19
+        seeded: 2026-11-04 sea-vc 1615517919f1
+  hpack-huff-mut-extra:
+    expected: sat
+    tier: smoke
+    time: 0.31
+    harness-expected: sat
+    tags: [mutant]
+    group: HPACK
+    mutant: nghttp2_hd_huffman.c:hp-huff-extra
+    export:
+      harness: harness/hpack_huff.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_huff.c
+        PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
+        MUT: nghttp2_hd_huffman.c:hp-huff-extra
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 9e27866ed7634e61db00e65edb95534d79e7ec6ef9ed1012d5b43ea91e51327f
+    established: sat
+  hpack-huff-proof:
+    expected: unsat
+    tier: smoke
+    time: 0.52
+    harness-expected: unsat
+    tags: [proof]
+    group: HPACK
+    export:
+      harness: harness/hpack_huff.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_huff.c
+        PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 9eb2108358ef6a9c2ddd775e95756177da3654e10f4e7287ba12335430a43ac6
+    established: unsat
+  hpack-huff-reach:
+    expected: sat
+    tier: smoke
+    time: 0.22
+    harness-expected: sat
+    tags: [reach]
+    group: HPACK
+    export:
+      harness: harness/hpack_huff.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_huff.c
+        PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
+      defines: [-DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 5730d67e50b5b56ef633cbb66f90a9f5d0f6c1ba0caff6be014dcbd4a20ab381
+    established: sat
+  hpack-rd-mut-namebound:
+    expected: sat
+    tier: quick
+    time: 11.35
+    harness-expected: sat
+    tags: [mutant]
+    group: HPACK
+    mutant: fd_hpack.c:hp-rd-namebound
+    export:
+      harness: harness/hpack_rd.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_rd.c
+        PATCHES: fd_hpack.c:hpack-rd fd_hpack_private.h:hpack-rd-varint
+        MUT: fd_hpack.c:hp-rd-namebound
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 94d68d841c1a63aec2d00d5b103d3cc9565f60b1e28a4b2e3399780b74eb1cda
+    established: sat
+  hpack-rd-mut-scratch:
+    expected: sat
+    tier: quick
+    time: 5.51
+    harness-expected: sat
+    tags: [mutant]
+    group: HPACK
+    mutant: fd_hpack.c:hp-rd-scratch
+    export:
+      harness: harness/hpack_rd.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_rd.c
+        PATCHES: fd_hpack.c:hpack-rd fd_hpack_private.h:hpack-rd-varint
+        MUT: fd_hpack.c:hp-rd-scratch
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: ccca2dd52e04636354c6bc4bb55596a717ca416a1d9ccf051eeccd75faa0924e
+    established: sat
+  hpack-rd-mut-varint8:
+    expected: sat
+    tier: smoke
+    time: 2.4
+    harness-expected: sat
+    tags: [mutant]
+    group: HPACK
+    mutant: fd_hpack_private.h:hp-rd-varint8
+    export:
+      harness: harness/hpack_rd.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_rd.c
+        PATCHES: fd_hpack.c:hpack-rd fd_hpack_private.h:hpack-rd-varint
+        MUT: fd_hpack_private.h:hp-rd-varint8
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 9ce4db31d2a14647e32d5bf6da903d148672b733b5ef7ca18dddefdb5ea60aeb
+    established: sat
+  hpack-rd-proof:
+    expected: unsat
+    tier: quick
+    time: 15.59
+    harness-expected: unsat
+    tags: [proof]
+    group: HPACK
+    export:
+      harness: harness/hpack_rd.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_rd.c
+        PATCHES: fd_hpack.c:hpack-rd fd_hpack_private.h:hpack-rd-varint
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 64d29a22974c1bfbcfbda197912f1b0ed1598c790460977768167aa8e9a67def
+    established: unsat
+  hpack-rd-reach-huff2:
+    expected: sat
+    tier: smoke
+    time: 2.39
+    harness-expected: sat
+    tags: [reach, canary]
+    group: HPACK
+    export:
+      harness: harness/hpack_rd.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_rd.c
+        PATCHES: fd_hpack.c:hpack-rd fd_hpack_private.h:hpack-rd-varint
+      defines: [-DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: d5b3be4b26e05b54d92888e243e7fb515ec4a0bf496d7f87fd8339368c3d4032
+    established: sat
+    counters:
+      vc.ackermann-constraints:
+        max: 511
+        seeded: 2026-11-04 sea-vc 1615517919f1
+      vc.ackermann-reads:
+        max: 64
+        seeded: 2026-11-04 sea-vc 1615517919f1
+  hpack-rd-reach-indexed:
+    expected: sat
+    tier: smoke
+    time: 4.8
+    harness-expected: sat
+    tags: [reach]
+    group: HPACK
+    export:
+      harness: harness/hpack_rd.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_rd.c
+        PATCHES: fd_hpack.c:hpack-rd fd_hpack_private.h:hpack-rd-varint
+      defines: [-DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: b54d48aab39cf38f483f5019bee2c70f5d2d7357f773b98eaa0a745b2a1d6167
+    established: sat
+  hpack-rd-reach-rawlong:
+    expected: sat
+    tier: smoke
+    time: 2.46
+    harness-expected: sat
+    tags: [reach]
+    group: HPACK
+    export:
+      harness: harness/hpack_rd.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_rd.c
+        PATCHES: fd_hpack.c:hpack-rd fd_hpack_private.h:hpack-rd-varint
+      defines: [-DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 6a24561794cc29864dc84ba5c4bcc3c26132905c4f58a3e457ed7543bf4b4793
+    established: sat
+  hpack-rd-reach-tsu-loop:
+    expected: sat
+    tier: smoke
+    time: 2.31
+    harness-expected: sat
+    tags: [reach]
+    group: HPACK
+    export:
+      harness: harness/hpack_rd.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_rd.c
+        PATCHES: fd_hpack.c:hpack-rd fd_hpack_private.h:hpack-rd-varint
+      defines: [-DCLAIM=4]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 95f1e02b654df1a536d8d5f271aa461431505e0e3986f53a1cb390b1849c90ab
+    established: sat
+  hpack-rd-revert-791176436-huffname:
+    expected: sat
+    tier: quick
+    time: 5.76
+    harness-expected: sat
+    tags: [mutant]
+    group: HPACK
+    mutant: fd_hpack.c:hp-rd-huffname
+    export:
+      harness: harness/hpack_rd.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_rd.c
+        PATCHES: fd_hpack.c:hpack-rd fd_hpack_private.h:hpack-rd-varint
+        MUT: fd_hpack.c:hp-rd-huffname
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: ee125cd8a8b559f8fb01a4dbd6f667728008c854dadb5fcffde3fe11eb839733
+    established: sat
+  hpack-rd-revert-791176436-namelen:
+    expected: sat
+    tier: quick
+    time: 6.46
+    harness-expected: sat
+    tags: [mutant]
+    group: HPACK
+    mutant: fd_hpack.c:hp-rd-namelen
+    export:
+      harness: harness/hpack_rd.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_rd.c
+        PATCHES: fd_hpack.c:hpack-rd fd_hpack_private.h:hpack-rd-varint
+        MUT: fd_hpack.c:hp-rd-namelen
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: bb28918a7c46817642eb1da3b129db462c0efe081dc85801c4d5dbd35c082439
+    established: sat
+  hpack-skip-mut-chunk:
+    expected: sat
+    tier: smoke
+    time: 0.71
+    harness-expected: sat
+    tags: [mutant]
+    group: HPACK
+    mutant: fd_hpack.c:hp-skip-chunk
+    export:
+      harness: harness/hpack_skip.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_skip.c
+        PATCHES: fd_hpack.c:hpack-skip-cut
+        MUT: fd_hpack.c:hp-skip-chunk
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: c810737d53343e313400f6c55fb1a33085f41dffc73e8eca47172b0314ed9a31
+    established: sat
+  hpack-skip-mut-eos:
+    expected: sat
+    tier: smoke
+    time: 0.87
+    harness-expected: sat
+    tags: [mutant]
+    group: HPACK
+    mutant: fd_hpack.c:hp-skip-eos
+    export:
+      harness: harness/hpack_skip.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_skip.c
+        PATCHES: fd_hpack.c:hpack-skip-cut
+        MUT: fd_hpack.c:hp-skip-eos
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: de48fa0ec1fd720e683e55a9c3fb5c3d2196826c7ff0aac2028a387690f7952e
+    established: sat
+  hpack-skip-mut-shift:
+    expected: sat
+    tier: smoke
+    time: 0.51
+    harness-expected: sat
+    tags: [mutant]
+    group: HPACK
+    mutant: fd_hpack.c:hp-skip-shift
+    export:
+      harness: harness/hpack_skip.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_skip.c
+        PATCHES: fd_hpack.c:hpack-skip-cut
+        MUT: fd_hpack.c:hp-skip-shift
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: a9a05016528caf9115ab40aa898365daedb83acdadaeb4647fde7bb88cc6b2d4
+    established: sat
+  hpack-skip-mut-sink:
+    expected: sat
+    tier: smoke
+    time: 0.62
+    harness-expected: sat
+    tags: [mutant]
+    group: HPACK
+    mutant: fd_hpack.c:hp-skip-sink
+    export:
+      harness: harness/hpack_skip.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_skip.c
+        PATCHES: fd_hpack.c:hpack-skip-cut
+        MUT: fd_hpack.c:hp-skip-sink
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 8c937f813792447fb645096bfa0c41aa24f82d1ae9624b595c772d1c886dcef7
+    established: sat
+  hpack-skip-proof:
+    expected: unsat
+    tier: quick
+    time: 14.15
+    harness-expected: unsat
+    tags: [proof]
+    group: HPACK
+    export:
+      harness: harness/hpack_skip.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_skip.c
+        PATCHES: fd_hpack.c:hpack-skip-cut
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 2a4dd476b6e35c9ee5f8e60714ac757b71f0008cb5d42aa104f100db75e3657b
+    established: unsat
+  hpack-skip-reach-fin:
+    expected: sat
+    tier: smoke
+    time: 0.54
+    harness-expected: sat
+    tags: [reach]
+    group: HPACK
+    export:
+      harness: harness/hpack_skip.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_skip.c
+        PATCHES: fd_hpack.c:hpack-skip-cut
+      defines: [-DCLAIM=4]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 6e54272c045919ee65a5abc5fa0547fbe68c886b57187fa58fd4da4359b86b94
+    established: sat
+  hpack-skip-reach-huffchunk:
+    expected: sat
+    tier: smoke
+    time: 2.32
+    harness-expected: sat
+    tags: [reach]
+    group: HPACK
+    export:
+      harness: harness/hpack_skip.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_skip.c
+        PATCHES: fd_hpack.c:hpack-skip-cut
+      defines: [-DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 7721899f43be5e0aacf7c33edcb8a2f3de6fe7c29fa47fd0bc1465118434efd2
+    established: sat
+  hpack-skip-reach-int14:
+    expected: sat
+    tier: smoke
+    time: 0.8
+    harness-expected: sat
+    tags: [reach]
+    group: HPACK
+    export:
+      harness: harness/hpack_skip.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_skip.c
+        PATCHES: fd_hpack.c:hpack-skip-cut
+      defines: [-DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 26ac806bed4ff428e06cda176f8d9fbaf5f61b06e1d35f27e08ae1c998522c8f
+    established: sat
+  hpack-skip-reach-strend:
+    expected: sat
+    tier: smoke
+    time: 1.12
+    harness-expected: sat
+    tags: [reach]
+    group: HPACK
+    export:
+      harness: harness/hpack_skip.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_skip.c
+        PATCHES: fd_hpack.c:hpack-skip-cut
+      defines: [-DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+    sha256: 26f796097ccb9bf6818db8f1e889949fd68e66d548bf08f76fc7f1b7cd44662d
+    established: sat
+  step-claims-cancel:
+    expected: unsat
+    tier: quick
+    time: 7.25
+    harness-expected: unsat
+    tags: [proof]
+    group: FD-FRAG step
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+      defines: [-DSTEPOP=2, -DINVCHK=0, -DVS=0]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 06cab656920178308ff387551c3271148607e8f6af1bbc35740b8c059716624f
+    established: unsat
+  step-claims-frag:
+    expected: unsat
+    tier: quick
+    time: 24.28
+    harness-expected: unsat
+    tags: [proof]
+    group: FD-FRAG step
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+      defines: [-DSTEPOP=1, -DINVCHK=0, -DVS=0]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 547ec4d46782033e763dda4410e3bf0a39571c2a5055aad1ab8ae29bf3a8712e
+    established: unsat
+  step-inv-cancel:
+    expected: unsat
+    tier: quick
+    time: 6.7
+    harness-expected: unsat
+    tags: [proof]
+    group: FD-FRAG step
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+      defines: [-DSTEPOP=2, -DVS=0, -DSEL=99]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 4a8247d90cad92dc6871b2ef679661ad1e533793d83f6f0c3a0e6988e477c84f
+    established: unsat
+  step-inv-frag:
+    expected: unsat
+    tier: quick
+    time: 14.92
+    harness-expected: unsat
+    tags: [proof]
+    group: FD-FRAG step
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+      defines: [-DSTEPOP=1, -DVS=0, -DSEL=99]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 0c5e0ef4841d813846ccbb7d256074f46dc7f789da88db755e0c54702f553d39
+    established: unsat
+  step-mut-bounds-1:
+    expected: sat
+    tier: smoke
+    time: 1.24
+    harness-expected: sat
+    tags: [mutant]
+    group: FD-FRAG step
+    mutant: mut-bounds-1
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+        MUT: mut-bounds-1
+      defines: [-DSTEPOP=1, -DINVCHK=0, -DVS=0, -DSEL=11]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 3d4ddee9e1f5888d43dcdc80887e06a2f97f9bbefa5603726e9cb5e62f91e9c0
+    established: sat
+  step-mut-bounds-hdr:
+    expected: sat
+    tier: smoke
+    time: 1.14
+    harness-expected: sat
+    tags: [mutant]
+    group: FD-FRAG step
+    mutant: mut-bounds-hdr
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+        MUT: mut-bounds-hdr
+      defines: [-DSTEPOP=1, -DINVCHK=0, -DVS=0, -DSEL=11]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c48643aee5c02bae80948690d3181bbbc5b795997139c322942105769ad545c4
+    established: sat
+  step-mut-cancel-nomap:
+    expected: sat
+    tier: smoke
+    time: 1.58
+    harness-expected: sat
+    tags: [mutant]
+    group: FD-FRAG step
+    mutant: mut-cancel-nomap
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+        MUT: mut-cancel-nomap
+      defines: [-DSTEPOP=2, -DVS=0, -DSEL=99]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c8ef7ec1e5f81d02b6c202019decfc7b34a71a8d159fc1a4053c2a9b96cd8da1
+    established: sat
+  step-mut-trim-noadvance:
+    expected: sat
+    tier: smoke
+    time: 1.31
+    harness-expected: sat
+    tags: [mutant]
+    group: FD-FRAG step
+    mutant: mut-trim-noadvance
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+        MUT: mut-trim-noadvance
+      defines: [-DSTEPOP=1, -DINVCHK=0, -DVS=0, -DSEL=7]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 19c98870531402267ad483c73121de860ff5db9ce2912aa0b526b0260dc95906
+    established: sat
+  step-reach-sz:
+    expected: sat
+    tier: full
+    time: 598.78
+    harness-expected: sat
+    tags: [reach]
+    group: FD-FRAG step
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+      defines: [-DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 7b2eac144c07557b2b9c263e5f44d08c36b2a8c692e7be2ae4c7a3668b9b61ee
+    established: sat
+  step-reach-trim:
+    expected: sat
+    tier: quick
+    time: 7.19
+    harness-expected: sat
+    tags: [reach]
+    group: FD-FRAG step
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+      defines: [-DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: e430cb6763ee003c00ab0e70dc89c0a30ce3a1e66e55d74e3b7c92f21620bc6f
+    established: sat
+  step-revert-071c0006:
+    expected: sat
+    tier: quick
+    time: 14.03
+    harness-expected: sat
+    tags: [mutant]
+    group: FD-FRAG step
+    mutant: revert-071c0006
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+        MUT: revert-071c0006
+      defines: [-DSTEPOP=1, -DINVCHK=0, -DVS=0]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 0a62ff71ab614b0c4c6098d2f0de21a8fe77a7ba61ef1176657209eef3c724bc
+    established: sat
+  step-vs-cancel:
+    expected: unsat
+    tier: full
+    time: 155.55
+    harness-expected: unsat
+    tags: [proof]
+    group: FD-FRAG step
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+      defines: [-DSTEPOP=2, -DINVCHK=0, -DSEL=99]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: f97665d2acce0b4128322679f0607abfd527cd471c60de2df13a12f542bbfe41
+    established: unsat
+  step-vs-frag:
+    expected: unsat
+    tier: full
+    time: 239.41
+    harness-expected: unsat
+    tags: [proof]
+    group: FD-FRAG step
+    export:
+      harness: harness/reasm_step.c
+      sweep: step_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: reasm_step.c
+        TARGET: disco/quic/fd_tpu_reasm.c
+        MACRO: REASM_C
+      defines: [-DSTEPOP=1, -DINVCHK=0, -DSEL=99]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 75db40d4ee6f5968bba020c8fc7714d387d41a7d9182354c40c6ad4e1144ceb0
+    established: unsat
+  txn-mut-datasz-nonstrict:
+    expected: sat
+    tier: full
+    time: 76.22
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-datasz-nocheck
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        MUT: txn-mut-datasz-nocheck
+      defines: [-DSTRICT=0]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 65e51c466715c3c834d5dc23f21d34e61525019dff87e9150bda7578926c7cea
+    established: sat
+  txn-mut-datasz-strict:
+    expected: unknown-ok
+    tier: hard
+    time: 905.93
+    harness-expected: unsat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-datasz-nocheck
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        MUT: txn-mut-datasz-nocheck
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 57dd4262cdf82eba72cb09bb347738871ef973d48fdba6a82fb0bd9c1f8d5770
+    established: timeout
+  txn-mut-maxacct:
+    expected: sat
+    tier: full
+    time: 686.19
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-maxacct
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        MUT: txn-mut-maxacct
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 15a7514a0f43029b64ab62a0bc776e1841b1fc0ce95423bb0d537c6aa14b3b01
+    established: sat
+  txn-mut-programid-zero:
+    expected: sat
+    tier: full
+    time: 184.56
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-programid-zero
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        MUT: txn-mut-programid-zero
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 86e02b5a8680bc250ebbb366b92ec269fa01d5a3897e2a305e6d4f4a1ff6758c
+    established: sat
+  txn-mut-writable-nonstrict:
+    expected: unknown-ok
+    tier: hard
+    time: 902.65
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-writable-nocheck
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        MUT: txn-mut-writable-nocheck
+      defines: [-DSTRICT=0]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 0b4714500843100120ce993af4885bf8b75615c2dfb861113269bcf8c08d7b94
+    established: timeout
+  txn-mut-writable-strict:
+    expected: unknown-ok
+    tier: hard
+    time: 902.67
+    harness-expected: unsat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-writable-nocheck
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        MUT: txn-mut-writable-nocheck
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 53d109a4421fa1f532b917a70f038b7ab50e47baf19c5aa67550364346ae488b
+    established: timeout
+  txn-pf-legacy-mut-alt-empty-inv34:
+    expected: unsat
+    tier: full
+    time: 325.34
+    harness-expected: unsat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-alt-empty
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut txn-writes
+        MUT: txn-mut-alt-empty
+      defines: [-DPROOF=1, -DSZMAX=1232UL, -DPFCHK=63, -DPF_ALT_MIN=34UL]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 951ca1916bd5bb750d1f4553ede7ed9fd445f4f5cec334c22bf34a4eded12976
+    established: unsat
+  txn-pf-legacy-mut-alt-empty-w34:
+    expected: sat
+    tier: quick
+    time: 20.74
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-alt-empty
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut txn-writes
+        MUT: txn-mut-alt-empty
+      defines: [-DPROOF=1, -DSZMAX=1232UL, -DPFCHK=256, -DPF_ALT_MIN=34UL]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: d18896548c11bba50bf558f0113ad8e45de21eb93d39f154a415f2715cb500ac
+    established: sat
+  txn-pf-legacy-mut-datasz-ns:
+    expected: sat
+    tier: quick
+    time: 37.86
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-datasz-nocheck
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut
+        MUT: txn-mut-datasz-nocheck
+      defines: [-DPROOF=1, -DSZMAX=1232UL, -DSTRICT=0]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 62b99887f9e483bef83c1fe2b011afa2d9a9bbb4359d7bc0860de004e38ba2bc
+    established: sat
+  txn-pf-legacy-mut-maxacct:
+    expected: sat
+    tier: quick
+    time: 24.58
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-maxacct
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut
+        MUT: txn-mut-maxacct
+      defines: [-DPROOF=1, -DSZMAX=1232UL]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c10ee2c8aa2b48fb48f3d48638b4e21f89e7ed044a14a4ff8ea2d7f9e3a99e3f
+    established: sat
+  txn-pf-legacy-mut-programid:
+    expected: sat
+    tier: full
+    time: 125.44
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-programid-zero
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut
+        MUT: txn-mut-programid-zero
+      defines: [-DPROOF=1, -DSZMAX=1232UL]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: c5a9dc2a8bbb84186fe709a06c6b3e1c5b932d5c4b574686df1b7d7fc521a144
+    established: sat
+  txn-pf-legacy-mut-read:
+    expected: sat
+    tier: quick
+    time: 43.17
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-read-nocheck
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut txn-reads
+        MUT: txn-mut-read-nocheck
+      defines: [-DPROOF=1, -DSZMAX=1232UL, -DPFCHK=191]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 8798d57be7195a071d6aee3d252eb9d8ee6484bf0d62b3f84a368b13138f0e09
+    established: sat
+  txn-pf-legacy-mut-writable-ns:
+    expected: sat
+    tier: quick
+    time: 42.82
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-writable-nocheck
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut
+        MUT: txn-mut-writable-nocheck
+      defines: [-DPROOF=1, -DSZMAX=1232UL, -DSTRICT=0]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: b7ac0846613379420fcd176c9324858f1575bd9991b69f4593bb1ddda2240fc9
+    established: sat
+  txn-pf-legacy-reach:
+    expected: sat
+    tier: full
+    time: 84.62
+    harness-expected: sat
+    tags: [reach]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut
+      defines: [-DPROOF=1, -DSZMAX=1232UL, -DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 68cfe6670e392a451981f7c92813c5e2b212f128c67e4a7b8188c175e23ab5fd
+    established: sat
+  txn-pf-legacy-reach-acct:
+    expected: sat
+    tier: quick
+    time: 18.24
+    harness-expected: sat
+    tags: [reach]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut
+      defines: [-DPROOF=1, -DSZMAX=1232UL, -DCLAIM=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 6acec8bdf9ad81740fb5513679290e24527ea66499c32fb630b5c06980561a2a
+    established: sat
+  txn-pf-legacy-reach-v0-alt:
+    expected: sat
+    tier: quick
+    time: 28.57
+    harness-expected: sat
+    tags: [reach]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut
+      defines: [-DPROOF=1, -DSZMAX=1232UL, -DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 1872b8cf23e929e1b2eb1b5d93669228a1cf3f3d89f262c2d42eedadab724578
+    established: sat
+  txn-pf-legacy-reads:
+    expected: unsat
+    tier: full
+    time: 837.57
+    harness-expected: unsat
+    tags: [proof]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut txn-reads
+      defines: [-DPROOF=1, -DSZMAX=1232UL, -DPFCHK=191]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 3d238ec2f8c3e3d47e66d9bb9202d8b3569ad2eab18e162dfca43c1c229c12c3
+    established: unsat
+  txn-pf-legacy-spec:
+    expected: unsat
+    tier: full
+    time: 653.37
+    harness-expected: unsat
+    tags: [proof]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut
+      defines: [-DPROOF=1, -DSZMAX=1232UL]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 1df11d2321e0021a14d57b0714448a1a7e5d1eccff5a8d79ab279e244f64ed68
+    established: unsat
+  txn-pf-legacy-spec-nonstrict:
+    expected: unsat
+    tier: full
+    time: 569.67
+    harness-expected: unsat
+    tags: [proof]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut
+      defines: [-DPROOF=1, -DSZMAX=1232UL, -DSTRICT=0]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 361b706fb7828356bb08be3dbb4ccfaca7bafe316b4a6fa08933e11e76a7c11d
+    established: unsat
+  txn-pf-legacy-writes:
+    expected: unknown-ok
+    tier: hard
+    time: 904.2
+    harness-expected: unsat
+    tags: [proof]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-legacy-cut txn-writes
+      defines: [-DPROOF=1, -DSZMAX=1232UL, -DPFCHK=319]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: f850f616d2a868a3a01af0225fdbf2d265fb0f0b6d13dc841fab7a028493612e
+    established: timeout
+  txn-pf-v1-mut-idx:
+    expected: sat
+    tier: quick
+    time: 44.86
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-v1-idx
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-v1-cut
+        MUT: txn-mut-v1-idx
+      defines: [-DPROOF=2, -DSZMAX=4096UL]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 843b3e16f16786fcf94ea47c5b498989b259c99335c52f1c1f8c1a3707c0c88e
+    established: sat
+  txn-pf-v1-mut-read:
+    expected: sat
+    tier: quick
+    time: 28.43
+    harness-expected: sat
+    tags: [mutant]
+    group: TX-PARSE
+    mutant: txn-mut-v1-read-nocheck
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-v1-cut txn-reads
+        MUT: txn-mut-v1-read-nocheck
+      defines: [-DPROOF=2, -DSZMAX=4096UL, -DPFCHK=191]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 0d196f95c57dedd3f4ab5a526c6925c43afc05b3a563f57fc785337b2a2be791
+    established: sat
+  txn-pf-v1-reach:
+    expected: sat
+    tier: full
+    time: 93.61
+    harness-expected: sat
+    tags: [reach]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-v1-cut
+      defines: [-DPROOF=2, -DSZMAX=4096UL, -DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: baafc0bd1e12a376eb81abe7cef55a220d8a7de7ec605f12363fd7fa43d60064
+    established: sat
+  txn-pf-v1-reach-acct:
+    expected: sat
+    tier: quick
+    time: 50.27
+    harness-expected: sat
+    tags: [reach]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-v1-cut
+      defines: [-DPROOF=2, -DSZMAX=4096UL, -DCLAIM=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: d761f286422ac499b0c8a2aae19a46235101d814fa0db50324809ee726488e51
+    established: sat
+  txn-pf-v1-reads:
+    expected: unsat
+    tier: quick
+    time: 59.91
+    harness-expected: unsat
+    tags: [proof]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-v1-cut txn-reads
+      defines: [-DPROOF=2, -DSZMAX=4096UL, -DPFCHK=191]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 7c99e36e81e9e32c2b351358321a6571cfe1cbf97145511a0a24ececa799f454
+    established: unsat
+  txn-pf-v1-spec:
+    expected: unsat
+    tier: full
+    time: 70.96
+    harness-expected: unsat
+    tags: [proof]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-v1-cut
+      defines: [-DPROOF=2, -DSZMAX=4096UL]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: aae9cfe2d5168cebdb38eeee0115a74ac4020e67ac56b22f264ae0d4e085085c
+    established: unsat
+  txn-pf-v1-spec-nonstrict:
+    expected: unsat
+    tier: full
+    time: 116.13
+    harness-expected: unsat
+    tags: [proof]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-v1-cut
+      defines: [-DPROOF=2, -DSZMAX=4096UL, -DSTRICT=0]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: b66a7d961d9104f879e0a691a6aa21bfb989134f986be1bd2bc0ef0073671c48
+    established: unsat
+  txn-pf-v1-writes:
+    expected: unsat
+    tier: quick
+    time: 30.79
+    harness-expected: unsat
+    tags: [proof]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+        PROOFS: txn-v1-cut txn-writes
+      defines: [-DPROOF=2, -DSZMAX=4096UL, -DPFCHK=319]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 7ddad26a66268d04d5df977f5be5d97d895724053260c63a2fd85f35cedc6ffe
+    established: unsat
+  txn-reach-instr-acct:
+    expected: sat
+    tier: full
+    time: 76.02
+    harness-expected: sat
+    tags: [reach]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+      defines: [-DCLAIM=4]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: d457264fc1095d45d040e825f49595074eb351a2116068b5c987c8ec1e3a3276
+    established: sat
+  txn-reach-legacy:
+    expected: sat
+    tier: full
+    time: 74.21
+    harness-expected: sat
+    tags: [reach]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+      defines: [-DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 0adc1573759910c04608f604fd7b8a16efbc9b2a2a39525efa0b4ca9536d115a
+    established: sat
+  txn-reach-v0-alt:
+    expected: sat
+    tier: full
+    time: 126.3
+    harness-expected: sat
+    tags: [reach]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+      defines: [-DCLAIM=2]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: a459ae728149618f8c08707b87b5502c1c701e183fd97a390c104633a1972615
+    established: sat
+  txn-reach-v1:
+    expected: sat
+    tier: full
+    time: 93.69
+    harness-expected: sat
+    tags: [reach]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+      defines: [-DCLAIM=3]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 207fa09f3aec4e6222f1b4114dd9f56bf68400a46902944711bc47b14f27b83f
+    established: sat
+  txn-spec:
+    expected: unknown-ok
+    tier: hard
+    time: 904.01
+    harness-expected: unsat
+    tags: [proof]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 48df144f779a914bb4eb2d8d9fae6dcbe3d2e3a842de63b55b76f187c5c2e28d
+    established: timeout
+  txn-spec-nonstrict:
+    expected: unknown-ok
+    tier: hard
+    time: 903.84
+    harness-expected: unsat
+    tags: [proof]
+    group: TX-PARSE
+    export:
+      harness: harness/txn_parse.c
+      sweep: txn_sweep.py
+      script: run_frag.sh
+      env:
+        SRC: txn_parse.c
+        TARGET: ballet/txn/fd_txn_parse.c
+        MACRO: TXN_C
+      defines: [-DSTRICT=0]
+      bound: 8
+      profile: sea-mlir-export
+    sha256: 438fe4a7a05697890ef52c4baf5fa08ab2d1625877a0b4732ed642f027b388cc
+    established: timeout
