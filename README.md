@@ -64,7 +64,11 @@ counterexample keeps the premises (sat required); class C: every
 counterexample violates them (sat or unsat). Absent: class A, the exact
 verdict with a clean replay. The rule and what the gate accepts are in
 sea-mlir's `docs/Benchmarks.md` (premise classes). Declared today: the NKI
-`nopre`, `nopre-range` and `mut-src-shift` mutants (class B).
+gather / gather-hw / dyn `nopre`, scatter `nopre-range` and gather
+`mut-src-shift` mutants (class B; scatter `nopre-unique` stays in bounds
+and is undeclared). `widthof-blowup-dyn-add-M4H4-nopre` (hard,
+`unknown-ok`) is undeclared on purpose: its replay mismatch is a Mem-SSA
+no-clobber one, not a premise question.
 
 ## Use with sea-mlir
 
