@@ -119,6 +119,7 @@ jobs:
     time: 0.31
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: nki/hw-N16D8K8-all/mut-src-shift.mlir
@@ -138,6 +139,7 @@ jobs:
     time: 0.22
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: nki/hw-N16D8K8-all/nopre.mlir
@@ -170,6 +172,7 @@ jobs:
     time: 348.59
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: nki/hw-N256D64K128-all/nopre.mlir
@@ -255,6 +258,7 @@ jobs:
     time: 0.15
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: nki/hw-N4D3K2-all/mut-src-shift.mlir
@@ -274,6 +278,7 @@ jobs:
     time: 0.07
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: nki/hw-N4D3K2-all/nopre.mlir
@@ -302,6 +307,7 @@ jobs:
     time: 459.52
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: nki/hw-N512D64K256-all/nopre.mlir
@@ -368,6 +374,7 @@ jobs:
     time: 3.95
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: nki/hw-N64D16K32-all/nopre.mlir
@@ -472,6 +479,7 @@ jobs:
     time: 0.22
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-DYN
     export:
       copied-from: sweep/dyn/M2-H2-P2-HT2/nopre.mlir
@@ -582,6 +590,7 @@ jobs:
     time: 0.39
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-DYN
     export:
       copied-from: sweep/dyn/M2-H4-P2-HT2/nopre.mlir
@@ -692,6 +701,7 @@ jobs:
     time: 0.59
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-DYN
     export:
       copied-from: sweep/dyn/M2-H6-P2-HT2/nopre.mlir
@@ -802,6 +812,7 @@ jobs:
     time: 0.34
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-DYN
     export:
       copied-from: sweep/dyn/M4-H2-P2-HT2/nopre.mlir
@@ -912,6 +923,7 @@ jobs:
     time: 0.41
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-DYN
     export:
       copied-from: sweep/dyn/M4-H4-P2-HT2/nopre.mlir
@@ -1022,6 +1034,7 @@ jobs:
     time: 0.99
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-DYN
     export:
       copied-from: sweep/dyn/M4-H6-P2-HT2/nopre.mlir
@@ -1132,6 +1145,7 @@ jobs:
     time: 0.26
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-DYN
     export:
       copied-from: sweep/dyn/M6-H2-P2-HT2/nopre.mlir
@@ -1242,6 +1256,7 @@ jobs:
     time: 1.24
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-DYN
     export:
       copied-from: sweep/dyn/M6-H4-P2-HT2/nopre.mlir
@@ -1352,6 +1367,7 @@ jobs:
     time: 0.93
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-DYN
     export:
       copied-from: sweep/dyn/M6-H6-P2-HT2/nopre.mlir
@@ -1475,6 +1491,7 @@ jobs:
     time: 0.11
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D3-K1-pmax2-fmax1/mut-src-shift.mlir
@@ -1501,6 +1518,7 @@ jobs:
     time: 0.08
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D3-K1-pmax2-fmax1/nopre.mlir
@@ -1625,6 +1643,7 @@ jobs:
     time: 0.15
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D3-K2-pmax2-fmax1/mut-src-shift.mlir
@@ -1651,6 +1670,7 @@ jobs:
     time: 0.09
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D3-K2-pmax2-fmax1/nopre.mlir
@@ -1775,6 +1795,7 @@ jobs:
     time: 0.21
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D3-K3-pmax2-fmax1/mut-src-shift.mlir
@@ -1801,6 +1822,7 @@ jobs:
     time: 0.16
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D3-K3-pmax2-fmax1/nopre.mlir
@@ -1925,6 +1947,7 @@ jobs:
     time: 0.36
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D3-K5-pmax2-fmax1/mut-src-shift.mlir
@@ -1951,6 +1974,7 @@ jobs:
     time: 0.14
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D3-K5-pmax2-fmax1/nopre.mlir
@@ -2075,6 +2099,7 @@ jobs:
     time: 0.09
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D4-K1-pmax2-fmax1/mut-src-shift.mlir
@@ -2101,6 +2126,7 @@ jobs:
     time: 0.1
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D4-K1-pmax2-fmax1/nopre.mlir
@@ -2225,6 +2251,7 @@ jobs:
     time: 0.07
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D4-K2-pmax2-fmax1/mut-src-shift.mlir
@@ -2251,6 +2278,7 @@ jobs:
     time: 0.11
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D4-K2-pmax2-fmax1/nopre.mlir
@@ -2375,6 +2403,7 @@ jobs:
     time: 0.17
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D4-K3-pmax2-fmax1/mut-src-shift.mlir
@@ -2401,6 +2430,7 @@ jobs:
     time: 0.09
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D4-K3-pmax2-fmax1/nopre.mlir
@@ -2525,6 +2555,7 @@ jobs:
     time: 0.26
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D4-K5-pmax2-fmax1/mut-src-shift.mlir
@@ -2551,6 +2582,7 @@ jobs:
     time: 0.19
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D4-K5-pmax2-fmax1/nopre.mlir
@@ -2675,6 +2707,7 @@ jobs:
     time: 0.12
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D5-K1-pmax2-fmax1/mut-src-shift.mlir
@@ -2701,6 +2734,7 @@ jobs:
     time: 0.12
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D5-K1-pmax2-fmax1/nopre.mlir
@@ -2825,6 +2859,7 @@ jobs:
     time: 0.15
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D5-K2-pmax2-fmax1/mut-src-shift.mlir
@@ -2851,6 +2886,7 @@ jobs:
     time: 0.16
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D5-K2-pmax2-fmax1/nopre.mlir
@@ -2975,6 +3011,7 @@ jobs:
     time: 0.26
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D5-K3-pmax2-fmax1/mut-src-shift.mlir
@@ -3001,6 +3038,7 @@ jobs:
     time: 0.2
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D5-K3-pmax2-fmax1/nopre.mlir
@@ -3125,6 +3163,7 @@ jobs:
     time: 0.41
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D5-K5-pmax2-fmax1/mut-src-shift.mlir
@@ -3151,6 +3190,7 @@ jobs:
     time: 0.33
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D5-K5-pmax2-fmax1/nopre.mlir
@@ -3275,6 +3315,7 @@ jobs:
     time: 0.07
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D9-K1-pmax2-fmax1/mut-src-shift.mlir
@@ -3301,6 +3342,7 @@ jobs:
     time: 0.13
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D9-K1-pmax2-fmax1/nopre.mlir
@@ -3425,6 +3467,7 @@ jobs:
     time: 0.23
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D9-K2-pmax2-fmax1/mut-src-shift.mlir
@@ -3451,6 +3494,7 @@ jobs:
     time: 0.2
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D9-K2-pmax2-fmax1/nopre.mlir
@@ -3575,6 +3619,7 @@ jobs:
     time: 0.32
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D9-K3-pmax2-fmax1/mut-src-shift.mlir
@@ -3601,6 +3646,7 @@ jobs:
     time: 0.3
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D9-K3-pmax2-fmax1/nopre.mlir
@@ -3725,6 +3771,7 @@ jobs:
     time: 0.7
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D9-K5-pmax2-fmax1/mut-src-shift.mlir
@@ -3751,6 +3798,7 @@ jobs:
     time: 0.43
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N2-D9-K5-pmax2-fmax1/nopre.mlir
@@ -3875,6 +3923,7 @@ jobs:
     time: 0.11
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D3-K1-pmax2-fmax1/mut-src-shift.mlir
@@ -3901,6 +3950,7 @@ jobs:
     time: 0.11
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D3-K1-pmax2-fmax1/nopre.mlir
@@ -4025,6 +4075,7 @@ jobs:
     time: 0.15
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D3-K2-pmax2-fmax1/mut-src-shift.mlir
@@ -4051,6 +4102,7 @@ jobs:
     time: 0.09
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D3-K2-pmax2-fmax1/nopre.mlir
@@ -4175,6 +4227,7 @@ jobs:
     time: 0.14
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D3-K3-pmax2-fmax1/mut-src-shift.mlir
@@ -4201,6 +4254,7 @@ jobs:
     time: 0.17
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D3-K3-pmax2-fmax1/nopre.mlir
@@ -4325,6 +4379,7 @@ jobs:
     time: 0.17
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D3-K5-pmax2-fmax1/mut-src-shift.mlir
@@ -4351,6 +4406,7 @@ jobs:
     time: 0.26
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D3-K5-pmax2-fmax1/nopre.mlir
@@ -4475,6 +4531,7 @@ jobs:
     time: 0.1
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D4-K1-pmax2-fmax1/mut-src-shift.mlir
@@ -4501,6 +4558,7 @@ jobs:
     time: 0.06
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D4-K1-pmax2-fmax1/nopre.mlir
@@ -4625,6 +4683,7 @@ jobs:
     time: 0.14
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D4-K2-pmax2-fmax1/mut-src-shift.mlir
@@ -4651,6 +4710,7 @@ jobs:
     time: 0.08
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D4-K2-pmax2-fmax1/nopre.mlir
@@ -4775,6 +4835,7 @@ jobs:
     time: 0.12
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D4-K3-pmax2-fmax1/mut-src-shift.mlir
@@ -4801,6 +4862,7 @@ jobs:
     time: 0.15
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D4-K3-pmax2-fmax1/nopre.mlir
@@ -4925,6 +4987,7 @@ jobs:
     time: 0.27
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D4-K5-pmax2-fmax1/mut-src-shift.mlir
@@ -4951,6 +5014,7 @@ jobs:
     time: 0.14
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D4-K5-pmax2-fmax1/nopre.mlir
@@ -5075,6 +5139,7 @@ jobs:
     time: 0.12
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D5-K1-pmax2-fmax1/mut-src-shift.mlir
@@ -5101,6 +5166,7 @@ jobs:
     time: 0.12
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D5-K1-pmax2-fmax1/nopre.mlir
@@ -5225,6 +5291,7 @@ jobs:
     time: 0.15
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D5-K2-pmax2-fmax1/mut-src-shift.mlir
@@ -5251,6 +5318,7 @@ jobs:
     time: 0.16
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D5-K2-pmax2-fmax1/nopre.mlir
@@ -5375,6 +5443,7 @@ jobs:
     time: 0.26
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D5-K3-pmax2-fmax1/mut-src-shift.mlir
@@ -5401,6 +5470,7 @@ jobs:
     time: 0.13
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D5-K3-pmax2-fmax1/nopre.mlir
@@ -5525,6 +5595,7 @@ jobs:
     time: 0.46
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D5-K5-pmax2-fmax1/mut-src-shift.mlir
@@ -5551,6 +5622,7 @@ jobs:
     time: 0.31
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D5-K5-pmax2-fmax1/nopre.mlir
@@ -5675,6 +5747,7 @@ jobs:
     time: 0.07
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D9-K1-pmax2-fmax1/mut-src-shift.mlir
@@ -5701,6 +5774,7 @@ jobs:
     time: 0.13
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D9-K1-pmax2-fmax1/nopre.mlir
@@ -5825,6 +5899,7 @@ jobs:
     time: 0.18
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D9-K2-pmax2-fmax1/mut-src-shift.mlir
@@ -5851,6 +5926,7 @@ jobs:
     time: 0.19
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D9-K2-pmax2-fmax1/nopre.mlir
@@ -5975,6 +6051,7 @@ jobs:
     time: 0.31
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D9-K3-pmax2-fmax1/mut-src-shift.mlir
@@ -6001,6 +6078,7 @@ jobs:
     time: 0.29
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D9-K3-pmax2-fmax1/nopre.mlir
@@ -6125,6 +6203,7 @@ jobs:
     time: 0.72
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D9-K5-pmax2-fmax1/mut-src-shift.mlir
@@ -6151,6 +6230,7 @@ jobs:
     time: 0.56
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-GATHER
     export:
       copied-from: sweep/gather/N5-D9-K5-pmax2-fmax1/nopre.mlir
@@ -6278,6 +6358,7 @@ jobs:
     time: 0.18
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N2-D2-K1-pmax2-fmax1/nopre-range.mlir
@@ -6434,6 +6515,7 @@ jobs:
     time: 0.35
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N2-D2-K2-pmax2-fmax1/nopre-range.mlir
@@ -6590,6 +6672,7 @@ jobs:
     time: 0.43
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N2-D2-K3-pmax2-fmax1/nopre-range.mlir
@@ -6746,6 +6829,7 @@ jobs:
     time: 1.57
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N2-D2-K4-pmax2-fmax1/nopre-range.mlir
@@ -6902,6 +6986,7 @@ jobs:
     time: 0.68
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N2-D5-K1-pmax2-fmax1/nopre-range.mlir
@@ -7058,6 +7143,7 @@ jobs:
     time: 4.3
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N2-D5-K2-pmax2-fmax1/nopre-range.mlir
@@ -7214,6 +7300,7 @@ jobs:
     time: 8.87
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N2-D5-K3-pmax2-fmax1/nopre-range.mlir
@@ -7370,6 +7457,7 @@ jobs:
     time: 20.76
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N2-D5-K4-pmax2-fmax1/nopre-range.mlir
@@ -7526,6 +7614,7 @@ jobs:
     time: 0.19
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N4-D2-K1-pmax2-fmax1/nopre-range.mlir
@@ -7682,6 +7771,7 @@ jobs:
     time: 0.66
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N4-D2-K2-pmax2-fmax1/nopre-range.mlir
@@ -7838,6 +7928,7 @@ jobs:
     time: 1.58
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N4-D2-K3-pmax2-fmax1/nopre-range.mlir
@@ -7994,6 +8085,7 @@ jobs:
     time: 2.25
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N4-D2-K4-pmax2-fmax1/nopre-range.mlir
@@ -8150,6 +8242,7 @@ jobs:
     time: 2.45
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N4-D5-K1-pmax2-fmax1/nopre-range.mlir
@@ -8306,6 +8399,7 @@ jobs:
     time: 10.76
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N4-D5-K2-pmax2-fmax1/nopre-range.mlir
@@ -8462,6 +8556,7 @@ jobs:
     time: 16.58
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N4-D5-K3-pmax2-fmax1/nopre-range.mlir
@@ -8618,6 +8713,7 @@ jobs:
     time: 41.79
     harness-expected: sat
     tags: [mutant]
+    premise-class: B
     group: NK-SCATTER
     export:
       copied-from: sweep/scatter/N4-D5-K4-pmax2-fmax1/nopre-range.mlir

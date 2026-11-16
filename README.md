@@ -44,6 +44,7 @@ jobs:
     tags: [proof]              # proof | reach | mutant | blowup-regression | inb-regression | unsafe
     args: [--ptr-mode=address] # appended to the configuration's args
     mutant: ...                # the mutant applied (sed script under harness/mutants)
+    premise-class: B           # B | C: the --seam pointer premises may fail on its counterexamples
     export: {...}              # how the .mlir was produced
     sha256: ...                # of the .mlir
 ```
@@ -54,6 +55,20 @@ at the commit recorded under `established`, cross-checked against the
 harness authors' expectations. A `mutant` job is a deliberately broken
 variant of the code under test (expected `sat`, unless the mutant is
 equivalent on the bounded harness).
+
+A job whose counterexamples may leave their object (a mutant that drops a
+precondition, a shifted index) declares `premise-class`: `sea-vc --seam`
+assumes the pointer premises (A-SEP, A-NULL, A-NOWRAP), and which model the
+solver returns decides whether the replay is clean. Class B: some
+counterexample keeps the premises (sat required); class C: every
+counterexample violates them (sat or unsat). Absent: class A, the exact
+verdict with a clean replay. The rule and what the gate accepts are in
+sea-mlir's `docs/Benchmarks.md` (premise classes). Declared today: the NKI
+gather / gather-hw / dyn `nopre`, scatter `nopre-range` and gather
+`mut-src-shift` mutants (class B; scatter `nopre-unique` stays in bounds
+and is undeclared). `widthof-blowup-dyn-add-M4H4-nopre` (hard,
+`unknown-ok`) is undeclared on purpose: its replay mismatch is a Mem-SSA
+no-clobber one, not a premise question.
 
 ## Use with sea-mlir
 
