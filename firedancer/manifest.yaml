@@ -2283,6 +2283,9 @@ jobs:
     harness-expected: unsat
     tags: [proof]
     group: TX-PARSE
+    args: [--vc-defs=hidden]
+    note: '--vc-defs=hidden needs a sea-vc with --vc-defs: z3''s QF_BV preamble flattens the shared address sums of the Ackermann
+      pairs again, hidden names keep them shared; Yices and Bitwuzla do not need it'
     export:
       harness: harness/txn_parse.c
       sweep: txn_sweep.py
@@ -2344,6 +2347,9 @@ jobs:
     harness-expected: sat
     tags: [reach]
     group: TX-PARSE
+    args: [--vc-defs=hidden]
+    note: '--vc-defs=hidden needs a sea-vc with --vc-defs: z3''s QF_BV preamble flattens the shared address sums of the Ackermann
+      pairs again, hidden names keep them shared; Yices and Bitwuzla do not need it'
     export:
       harness: harness/txn_parse.c
       sweep: txn_sweep.py
