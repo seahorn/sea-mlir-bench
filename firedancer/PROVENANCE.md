@@ -63,6 +63,28 @@ Their verdicts, tiers and times were established on 2026-11-24 with sea-mlir
 fd6d8a7 (sea-vc sha256 af61104be0ba...), two jobs in parallel, not by the family's
 `established` run.
 
+`hpack-huff-fill-proof-noaxiom` and `hpack-huff-fill-erase-proof-noaxiom` are
+`hpack-huff-fill-proof` and `hpack-huff-fill-erase-proof` exported with
+`-DHP_TAB_AXIOM=0`: the harness no longer assumes the table fact T-TAB (every
+entry's fstate names one of the 257 rows) at each table read, so unsat rests
+on the 4112 fills. `hpack-huff-fill-mut-tab-noaxiom` is the first of them with
+the mutant `mutants/hp-huff-tab-row.sed` applied to the copy of
+`nghttp2_hd_huffman_data.c` (entry 0 of row 0 names row 511; one byte of one
+fill differs): sat, the row-index check H3 fails, so these verdicts depend on
+the table's data. These three were exported with SeaHorn
+897c3dcac127748a3af2de0e212c3479f847fb38 (branch fix/sea-mlir-export-errors:
+dev18 67474bf6 and two export fixes that change only diagnostics and exit
+codes; it reproduces `hpack-huff-fill-proof.mlir` byte for byte), same
+recipe:
+
+    SRC=hpack_huff.c PATCHES=nghttp2_hd_huffman.c:hpack-huff-cut \
+      [MUT=nghttp2_hd_huffman_data.c:hp-huff-tab-row] \
+      SEA_EXTRA='--horn-sea-mlir-allow-uninit-globals [--horn-sea-mlir-mem-ssa=erase]' \
+      run_hpack.sh OUT -DHP_TAB_AXIOM=0
+
+Verdicts and times (13.7 s, 12.0 s, 18.2 s) as above, with sea-mlir fd6d8a7
+plus a test-only commit (sea-vc sha256 e14f21731324...).
+
 ## h2fc-blowup-*
 
 Copied from an earlier export (the h2fc ablation set): produced by

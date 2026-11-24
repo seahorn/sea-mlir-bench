@@ -985,6 +985,33 @@ jobs:
       older export of hpack-huff-proof left the table uninitialized'
     sha256: c2980571d390e15af085cab116040c645ab946a4ed9e7faefb3abc6ac18882c9
     established: unsat
+  hpack-huff-fill-erase-proof-noaxiom:
+    expected: unsat
+    tier: quick
+    time: 12.04
+    harness-expected: unsat
+    tags: [proof, mem-fill]
+    group: HPACK
+    export:
+      harness: harness/hpack_huff.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_huff.c
+        PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
+      defines: [-DHP_TAB_AXIOM=0]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn: 'seahorn 897c3dcac127748a3af2de0e212c3479f847fb38 (branch fix/sea-mlir-export-errors: dev18 67474bf6
+        and two export fixes that change only diagnostics and exit codes)'
+      mem-ssa: erase
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals, --horn-sea-mlir-mem-ssa=erase]
+      date: '2026-11-24'
+    note: 'hpack-huff-fill-erase-proof (seaimp.mem.fill) without the table axiom (HP_TAB_AXIOM=0): unsat rests on the
+      data of nghttp2''s huff_decode_table, 4112 fills of 3 bytes (T-TAB: every entry''s fstate names one of the 257
+      rows)'
+    sha256: a8edb104b9a07930c38fd7ca6e7598b4bf065cec3ed127c20c2f124fa2014256
+    established: unsat
   hpack-huff-fill-erase-reach:
     expected: sat
     tier: quick
@@ -1039,6 +1066,34 @@ jobs:
       hpack-huff-mut-extra left the table uninitialized'
     sha256: a3e1e44f83b6736c612a97d0744f553c80fb79854bad84dab4b3f05a1db9183a
     established: sat
+  hpack-huff-fill-mut-tab-noaxiom:
+    expected: sat
+    tier: quick
+    time: 18.23
+    harness-expected: sat
+    tags: [mutant, mem-fill]
+    group: HPACK
+    mutant: nghttp2_hd_huffman_data.c:hp-huff-tab-row
+    export:
+      harness: harness/hpack_huff.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_huff.c
+        PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
+        MUT: nghttp2_hd_huffman_data.c:hp-huff-tab-row
+      defines: [-DHP_TAB_AXIOM=0]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn: 'seahorn 897c3dcac127748a3af2de0e212c3479f847fb38 (branch fix/sea-mlir-export-errors: dev18 67474bf6
+        and two export fixes that change only diagnostics and exit codes)'
+      mem-ssa: keep
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+      date: '2026-11-24'
+    note: 'hpack-huff-fill-proof-noaxiom with one table entry changed (row 0, nibble 0 names row 511; one byte of one
+      fill differs): the H3 row-index check fails, so the verdict of the -noaxiom jobs depends on the fill data'
+    sha256: 5185e20e0f71b081567c783c9ade3fd140e2b117fb46f1d4cf94ca7caf4ca551
+    established: sat
   hpack-huff-fill-proof:
     expected: unsat
     tier: quick
@@ -1064,6 +1119,32 @@ jobs:
       huff_decode_table as 4112 fills of 3 bytes (an entry without its padding byte); the older export of
       hpack-huff-proof left the table uninitialized'
     sha256: 9f8f7799b422ce4d4ad09b6458c17a5977ff553894fea40f5f49cff9321805b9
+    established: unsat
+  hpack-huff-fill-proof-noaxiom:
+    expected: unsat
+    tier: quick
+    time: 13.66
+    harness-expected: unsat
+    tags: [proof, mem-fill]
+    group: HPACK
+    export:
+      harness: harness/hpack_huff.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_huff.c
+        PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
+      defines: [-DHP_TAB_AXIOM=0]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn: 'seahorn 897c3dcac127748a3af2de0e212c3479f847fb38 (branch fix/sea-mlir-export-errors: dev18 67474bf6
+        and two export fixes that change only diagnostics and exit codes)'
+      mem-ssa: keep
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+      date: '2026-11-24'
+    note: 'hpack-huff-fill-proof without the table axiom (HP_TAB_AXIOM=0): unsat rests on the data of nghttp2''s
+      huff_decode_table, 4112 fills of 3 bytes (T-TAB: every entry''s fstate names one of the 257 rows)'
+    sha256: f4766542ec2b667ee11400d0adc082e46b0a4f96509ae434f88713a609fb3db4
     established: unsat
   hpack-huff-fill-reach:
     expected: sat
