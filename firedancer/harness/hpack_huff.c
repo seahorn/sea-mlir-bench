@@ -15,9 +15,9 @@
 // Loop cut invariant: src in [src0, end], out <= 2 * in so far, fstate ok,
 // and fstate is the entry state while nothing has been read.
 // Preservation needs the table fact T-TAB: every entry's fstate is
-// HP_FSTATE_OK. HP_TAB_AXIOM=1 (default) assumes it per read, because the
-// export drops the 16448-byte initializer (limit 16 KiB); T-TAB itself is
-// checked natively (check_hpack_models.sh).
+// HP_FSTATE_OK. HP_TAB_AXIOM=1 assumes it per read (default 0): SeaHorn before
+// dev18 67474bf6 dropped the 16448-byte initializer; later exports carry the
+// table. T-TAB itself is checked natively (check_hpack_models.sh).
 // CLAIM=1 reach: a successful final decode of >= 2 bytes that wrote 3 symbols.
 #define HUFF_MOCK 0
 #include "hpack_common.h"
@@ -33,7 +33,7 @@ static uint16_t hp_f0; /* ghost: fstate at entry */
   node.fstate = nd_ushort(); t = &node
 
 #ifndef HP_TAB_AXIOM
-#define HP_TAB_AXIOM 1
+#define HP_TAB_AXIOM 0
 #endif
 #if HP_TAB_AXIOM
 #define HP_TAB(t) assume(HP_FSTATE_OK((t)->fstate))

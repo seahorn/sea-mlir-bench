@@ -85,6 +85,12 @@ recipe:
 Verdicts and times (13.7 s, 12.0 s, 18.2 s) as above, with sea-mlir fd6d8a7
 plus a test-only commit (sea-vc sha256 e14f21731324...).
 
+Since 2026-11-24 the harness default is `HP_TAB_AXIOM=0` (SeaHorn dev18
+67474bf6 and later export the table); every older job built from
+`hpack_huff.c` records `-DHP_TAB_AXIOM=1` in its manifest `defines` so
+that re-exporting it reproduces the old export, and the noaxiom jobs keep
+`-DHP_TAB_AXIOM=0` explicit. Other hpack jobs do not read the define.
+
 ## h2fc-blowup-*
 
 Copied from an earlier export (the h2fc ablation set): produced by

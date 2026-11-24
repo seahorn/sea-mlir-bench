@@ -973,7 +973,7 @@ jobs:
       env:
         SRC: hpack_huff.c
         PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
-      defines: []
+      defines: [-DHP_TAB_AXIOM=1]
       bound: 8
       profile: sea-mlir-export
       seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
@@ -1026,7 +1026,7 @@ jobs:
       env:
         SRC: hpack_huff.c
         PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
-      defines: [-DCLAIM=1]
+      defines: [-DHP_TAB_AXIOM=1, -DCLAIM=1]
       bound: 8
       profile: sea-mlir-export
       seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
@@ -1054,7 +1054,7 @@ jobs:
         SRC: hpack_huff.c
         PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
         MUT: nghttp2_hd_huffman.c:hp-huff-extra
-      defines: []
+      defines: [-DHP_TAB_AXIOM=1]
       bound: 8
       profile: sea-mlir-export
       seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
@@ -1108,7 +1108,7 @@ jobs:
       env:
         SRC: hpack_huff.c
         PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
-      defines: []
+      defines: [-DHP_TAB_AXIOM=1]
       bound: 8
       profile: sea-mlir-export
       seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
@@ -1160,7 +1160,7 @@ jobs:
       env:
         SRC: hpack_huff.c
         PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
-      defines: [-DCLAIM=1]
+      defines: [-DHP_TAB_AXIOM=1, -DCLAIM=1]
       bound: 8
       profile: sea-mlir-export
       seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
@@ -1188,7 +1188,7 @@ jobs:
         SRC: hpack_huff.c
         PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
         MUT: nghttp2_hd_huffman.c:hp-huff-extra
-      defines: []
+      defines: [-DHP_TAB_AXIOM=1]
       bound: 8
       profile: sea-mlir-export
       seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
@@ -1208,7 +1208,7 @@ jobs:
       env:
         SRC: hpack_huff.c
         PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
-      defines: []
+      defines: [-DHP_TAB_AXIOM=1]
       bound: 8
       profile: sea-mlir-export
       seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
@@ -1228,7 +1228,7 @@ jobs:
       env:
         SRC: hpack_huff.c
         PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
-      defines: [-DCLAIM=1]
+      defines: [-DHP_TAB_AXIOM=1, -DCLAIM=1]
       bound: 8
       profile: sea-mlir-export
       seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
