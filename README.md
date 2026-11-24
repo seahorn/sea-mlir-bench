@@ -41,7 +41,7 @@ jobs:
     tier: quick                # smoke <5 s | quick <60 s | full <900 s | hard (tracked, not gated)
     time: 12.3                 # wall seconds when established
     harness-expected: unsat    # the harness author's expectation (when the harness states one)
-    tags: [proof]              # proof | reach | mutant | blowup-regression | inb-regression | unsafe
+    tags: [proof]              # proof | reach | mutant | blowup-regression | inb-regression | unsafe | mem-fill | canary
     args: [--ptr-mode=address] # appended to the configuration's args
     mutant: ...                # the mutant applied (sed script under harness/mutants)
     premise-class: B           # B | C: the --seam pointer premises may fail on its counterexamples

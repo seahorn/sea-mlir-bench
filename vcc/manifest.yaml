@@ -17,6 +17,17 @@ defaults:
   args: [--lower, --seam, --widen-memory=8]
   timeout: 900
   mem: 16384
+counter-rules:
+- jobs: -fill(-erase)?$
+  counters:
+    vc.expand-mem-fill.kept:
+      exact: 1
+    vc.expand-mem-fill.expanded:
+      exact: 0
+  why: 'form of the lowering (docs/design/MemFill.md): under --seam every fill of the exported global initializer
+    (s_tolower_table, 256 bytes) stays an mfill term on a byte memory, none is expanded into stores (vc.expand-mem-fill
+    kept / expanded). A fill expanded, dropped or no longer reported fails here; a deliberate change of the form (e.g.
+    widening that packs these fills) updates the bound'
 established:
   sea-mlir:
     rev: 6d6833cb8e6aea70fffbf231c2e681d07bcd9204
@@ -157,6 +168,54 @@ jobs:
       date: '2026-11-02T23:27:24'
     sha256: 82b23690bdc6c125537ed1fe3a0ba177c8e543c25ae5ebd9859c4e984484cc26
     established: unsat
+  array_eq_ignore_case-fill:
+    expected: unsat
+    tier: smoke
+    time: 2.07
+    tags: [mem-fill, canary]
+    export:
+      job: jobs/array_eq_ignore_case
+      bitcode-sha256: 786993217455374747ac1c1d5b7720ad3ffb740ab6add9957d551bdbdd984e51
+      seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
+      mem-ssa: keep
+      command: <seahorn>/build/run/bin/sea fpf -O3 --inline --enable-loop-idiom --enable-indvar
+        --no-lower-gv-init-struct --externalize-addr-taken-functions --no-kill-vaarg --with-arith-overflow=true
+        --horn-unify-assumes=false --horn-gsa
+        --no-fat-fns=bcmp,memcpy,assert_bytes_match,ensure_linked_list_is_allocated,sea_aws_linked_list_is_valid
+        --dsa=sea-cs-t --devirt-functions=types --bmc=opsem --horn-vcgen-use-ite --horn-vcgen-only-dataflow=true
+        --horn-bmc-coi=true --sea-opsem-allocator=static --horn-explicit-sp0=false --horn-bv2-lambdas
+        --horn-bv2-simplify=true --horn-bv2-extra-widemem -S --keep-temps --temp-dir=TMP --horn-stats=true
+        --ignore-define-verifier-fns --bound=10 --horn-bmc-engine=sea-mlir --horn-sea-vc=/bin/true
+        --horn-sea-mlir-out=OUT/array_eq_ignore_case.mlir BITCODE
+      date: '2026-11-24'
+    note: 'the job array_eq_ignore_case re-exported by a SeaHorn that writes global initializers as sea.mem.fill
+      (s_tolower_table, 256 bytes); same bitcode'
+    sha256: d8b551837b7471b05c4e752fa9af3073f7a35d79e0e9e6db7d520686ca2a7b09
+    established: unsat
+  array_eq_ignore_case-fill-erase:
+    expected: unsat
+    tier: smoke
+    time: 2.07
+    tags: [mem-fill]
+    export:
+      job: jobs/array_eq_ignore_case
+      bitcode-sha256: 786993217455374747ac1c1d5b7720ad3ffb740ab6add9957d551bdbdd984e51
+      seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
+      mem-ssa: erase
+      command: <seahorn>/build/run/bin/sea fpf -O3 --inline --enable-loop-idiom --enable-indvar
+        --no-lower-gv-init-struct --externalize-addr-taken-functions --no-kill-vaarg --with-arith-overflow=true
+        --horn-unify-assumes=false --horn-gsa
+        --no-fat-fns=bcmp,memcpy,assert_bytes_match,ensure_linked_list_is_allocated,sea_aws_linked_list_is_valid
+        --dsa=sea-cs-t --devirt-functions=types --bmc=opsem --horn-vcgen-use-ite --horn-vcgen-only-dataflow=true
+        --horn-bmc-coi=true --sea-opsem-allocator=static --horn-explicit-sp0=false --horn-bv2-lambdas
+        --horn-bv2-simplify=true --horn-bv2-extra-widemem -S --keep-temps --temp-dir=TMP --horn-stats=true
+        --ignore-define-verifier-fns --bound=10 --horn-bmc-engine=sea-mlir --horn-sea-vc=/bin/true
+        --horn-sea-mlir-out=OUT/array_eq_ignore_case.mlir --horn-sea-mlir-mem-ssa=erase BITCODE
+      date: '2026-11-24'
+    note: 'the job array_eq_ignore_case re-exported by a SeaHorn that writes global initializers as sea.mem.fill in the
+      seaimp form (--horn-sea-mlir-mem-ssa=erase: seaimp.mem.fill) (s_tolower_table, 256 bytes); same bitcode'
+    sha256: d8991cf01fa8ffe6472475787ddcbd617b136cc20c2ab15d09baa9c0bfc756e0
+    established: unsat
   array_eq_ignore_case2:
     expected: unsat
     tier: smoke
@@ -170,6 +229,30 @@ jobs:
         BITCODE
       date: '2026-11-02T23:27:34'
     sha256: 2246c48a1827d9af722b322d9ecaaa56ce988106cf5d2f061d5bf0c0334953c8
+    established: unsat
+  array_eq_ignore_case2-fill:
+    expected: unsat
+    tier: smoke
+    time: 1.74
+    tags: [mem-fill]
+    export:
+      job: jobs2/array_eq_ignore_case2
+      bitcode-sha256: 30c52bfdfa5630eae9205823bf5180efb557b2b6e19d198bb8df4e52fec6b50b
+      seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
+      mem-ssa: keep
+      command: <seahorn>/build/run/bin/sea fpf -O3 --inline --enable-loop-idiom --enable-indvar
+        --no-lower-gv-init-struct --externalize-addr-taken-functions --no-kill-vaarg --with-arith-overflow=true
+        --horn-unify-assumes=false --horn-gsa
+        --no-fat-fns=bcmp,memcpy,assert_bytes_match,ensure_linked_list_is_allocated,sea_aws_linked_list_is_valid
+        --dsa=sea-cs-t --devirt-functions=types --bmc=opsem --horn-vcgen-use-ite --horn-vcgen-only-dataflow=true
+        --horn-bmc-coi=true --sea-opsem-allocator=static --horn-explicit-sp0=false --horn-bv2-lambdas
+        --horn-bv2-simplify=true --horn-bv2-extra-widemem -S --keep-temps --temp-dir=TMP --horn-stats=true
+        --ignore-define-verifier-fns --bound=10 --horn-bv2-tracking-mem=true --horn-bmc-engine=sea-mlir
+        --horn-sea-vc=/bin/true --horn-sea-mlir-out=OUT/array_eq_ignore_case2.mlir BITCODE
+      date: '2026-11-24'
+    note: 'the job array_eq_ignore_case2 re-exported by a SeaHorn that writes global initializers as sea.mem.fill
+      (s_tolower_table, 256 bytes); same bitcode'
+    sha256: 5a6abcea727d4623e4c49f7b12a764de17c60e56341142f29c7b89570df8787b
     established: unsat
   array_list_back:
     expected: unsat
@@ -1646,6 +1729,30 @@ jobs:
       date: '2026-11-02T23:27:28'
     sha256: 0afacc033ad08e7cc8682e3587f1d6319e3a49b58ee69eebe7b9fd3ecb9a4ef2
     established: unsat
+  byte_cursor_eq_ignore_case-fill:
+    expected: unsat
+    tier: smoke
+    time: 1.52
+    tags: [mem-fill]
+    export:
+      job: jobs/byte_cursor_eq_ignore_case
+      bitcode-sha256: ae2c6e47b0aa101f049e8b436f456dbf9f93d261b1a7765bd4e8d0cdba0a4236
+      seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
+      mem-ssa: keep
+      command: <seahorn>/build/run/bin/sea fpf -O3 --inline --enable-loop-idiom --enable-indvar
+        --no-lower-gv-init-struct --externalize-addr-taken-functions --no-kill-vaarg --with-arith-overflow=true
+        --horn-unify-assumes=false --horn-gsa
+        --no-fat-fns=bcmp,memcpy,assert_bytes_match,ensure_linked_list_is_allocated,sea_aws_linked_list_is_valid
+        --dsa=sea-cs-t --devirt-functions=types --bmc=opsem --horn-vcgen-use-ite --horn-vcgen-only-dataflow=true
+        --horn-bmc-coi=true --sea-opsem-allocator=static --horn-explicit-sp0=false --horn-bv2-lambdas
+        --horn-bv2-simplify=true --horn-bv2-extra-widemem -S --keep-temps --temp-dir=TMP --horn-stats=true
+        --ignore-define-verifier-fns --bound=10 --horn-bmc-engine=sea-mlir --horn-sea-vc=/bin/true
+        --horn-sea-mlir-out=OUT/byte_cursor_eq_ignore_case.mlir BITCODE
+      date: '2026-11-24'
+    note: 'the job byte_cursor_eq_ignore_case re-exported by a SeaHorn that writes global initializers as sea.mem.fill
+      (s_tolower_table, 256 bytes); same bitcode'
+    sha256: b9e5a88c46dd2fffe67b8dec71b9c21421fdd2168b94e18a624fdfc11c0cd45f
+    established: unsat
   byte_cursor_eq_ignore_case2:
     expected: unsat
     tier: smoke
@@ -1659,6 +1766,55 @@ jobs:
         BITCODE
       date: '2026-11-02T23:27:37'
     sha256: 245968665774a22191de74ab58f45d8f0346d2c1b07bfe801ed972c3e3a1493b
+    established: unsat
+  byte_cursor_eq_ignore_case2-fill:
+    expected: unsat
+    tier: smoke
+    time: 1.23
+    tags: [mem-fill]
+    export:
+      job: jobs2/byte_cursor_eq_ignore_case2
+      bitcode-sha256: 579344501b140c780f0117b655ff8cef1b11eb7d2cb8115ae38c9daf23911b38
+      seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
+      mem-ssa: keep
+      command: <seahorn>/build/run/bin/sea fpf -O3 --inline --enable-loop-idiom --enable-indvar
+        --no-lower-gv-init-struct --externalize-addr-taken-functions --no-kill-vaarg --with-arith-overflow=true
+        --horn-unify-assumes=false --horn-gsa
+        --no-fat-fns=bcmp,memcpy,assert_bytes_match,ensure_linked_list_is_allocated,sea_aws_linked_list_is_valid
+        --dsa=sea-cs-t --devirt-functions=types --bmc=opsem --horn-vcgen-use-ite --horn-vcgen-only-dataflow=true
+        --horn-bmc-coi=true --sea-opsem-allocator=static --horn-explicit-sp0=false --horn-bv2-lambdas
+        --horn-bv2-simplify=true --horn-bv2-extra-widemem -S --keep-temps --temp-dir=TMP --horn-stats=true
+        --ignore-define-verifier-fns --bound=10 --horn-bv2-tracking-mem=true --horn-bmc-engine=sea-mlir
+        --horn-sea-vc=/bin/true --horn-sea-mlir-out=OUT/byte_cursor_eq_ignore_case2.mlir BITCODE
+      date: '2026-11-24'
+    note: 'the job byte_cursor_eq_ignore_case2 re-exported by a SeaHorn that writes global initializers as sea.mem.fill
+      (s_tolower_table, 256 bytes); same bitcode'
+    sha256: b659c0282b566c6afcb39c5847a969617e40a9b5484e6c4a63860fbc0b244683
+    established: unsat
+  byte_cursor_eq_ignore_case2-fill-erase:
+    expected: unsat
+    tier: smoke
+    time: 1.28
+    tags: [mem-fill]
+    export:
+      job: jobs2/byte_cursor_eq_ignore_case2
+      bitcode-sha256: 579344501b140c780f0117b655ff8cef1b11eb7d2cb8115ae38c9daf23911b38
+      seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
+      mem-ssa: erase
+      command: <seahorn>/build/run/bin/sea fpf -O3 --inline --enable-loop-idiom --enable-indvar
+        --no-lower-gv-init-struct --externalize-addr-taken-functions --no-kill-vaarg --with-arith-overflow=true
+        --horn-unify-assumes=false --horn-gsa
+        --no-fat-fns=bcmp,memcpy,assert_bytes_match,ensure_linked_list_is_allocated,sea_aws_linked_list_is_valid
+        --dsa=sea-cs-t --devirt-functions=types --bmc=opsem --horn-vcgen-use-ite --horn-vcgen-only-dataflow=true
+        --horn-bmc-coi=true --sea-opsem-allocator=static --horn-explicit-sp0=false --horn-bv2-lambdas
+        --horn-bv2-simplify=true --horn-bv2-extra-widemem -S --keep-temps --temp-dir=TMP --horn-stats=true
+        --ignore-define-verifier-fns --bound=10 --horn-bv2-tracking-mem=true --horn-bmc-engine=sea-mlir
+        --horn-sea-vc=/bin/true --horn-sea-mlir-out=OUT/byte_cursor_eq_ignore_case2.mlir --horn-sea-mlir-mem-ssa=erase
+        BITCODE
+      date: '2026-11-24'
+    note: 'the job byte_cursor_eq_ignore_case2 re-exported by a SeaHorn that writes global initializers as sea.mem.fill
+      in the seaimp form (--horn-sea-mlir-mem-ssa=erase: seaimp.mem.fill) (s_tolower_table, 256 bytes); same bitcode'
+    sha256: 9cf9b37d89a1a9c615cedabc7cfd610b0eb9e0470fafeabf574ecbba6a0641df
     established: unsat
   byte_cursor_from_array:
     expected: unsat

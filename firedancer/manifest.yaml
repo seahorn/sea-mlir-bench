@@ -17,6 +17,17 @@ defaults:
   args: [--lower, --seam, --widen-memory=4]
   timeout: 900
   mem: 16384
+counter-rules:
+- jobs: ^hpack-huff-fill-
+  counters:
+    vc.expand-mem-fill.kept:
+      exact: 4112
+    vc.expand-mem-fill.expanded:
+      exact: 0
+  why: 'form of the lowering (docs/design/MemFill.md): under --seam every fill of the exported global initializer
+    (nghttp2''s huff_decode_table, 4112 fills of 3 bytes) stays an mfill term on a byte memory, none is expanded into
+    stores (vc.expand-mem-fill kept / expanded). A fill expanded, dropped or no longer reported fails here; a deliberate
+    change of the form (e.g. widening that packs these fills) updates the bound'
 established:
   sea-mlir:
     rev: 6d6833cb8e6aea70fffbf231c2e681d07bcd9204
@@ -948,6 +959,138 @@ jobs:
       vc.ackermann-reads:
         max: 19
         seeded: 2026-11-04 sea-vc 1615517919f1
+  hpack-huff-fill-erase-proof:
+    expected: unsat
+    tier: quick
+    time: 13.27
+    harness-expected: unsat
+    tags: [proof, mem-fill]
+    group: HPACK
+    export:
+      harness: harness/hpack_huff.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_huff.c
+        PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
+      mem-ssa: erase
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals, --horn-sea-mlir-mem-ssa=erase]
+      date: '2026-11-24'
+    note: 'hpack-huff-proof exported by a SeaHorn that writes global initializers as sea.mem.fill in the seaimp form
+      (seaimp.mem.fill): nghttp2''s huff_decode_table as 4112 fills of 3 bytes (an entry without its padding byte); the
+      older export of hpack-huff-proof left the table uninitialized'
+    sha256: c2980571d390e15af085cab116040c645ab946a4ed9e7faefb3abc6ac18882c9
+    established: unsat
+  hpack-huff-fill-erase-reach:
+    expected: sat
+    tier: quick
+    time: 11.37
+    harness-expected: sat
+    tags: [reach, mem-fill]
+    group: HPACK
+    export:
+      harness: harness/hpack_huff.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_huff.c
+        PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
+      defines: [-DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
+      mem-ssa: erase
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals, --horn-sea-mlir-mem-ssa=erase]
+      date: '2026-11-24'
+    note: 'hpack-huff-reach exported by a SeaHorn that writes global initializers as sea.mem.fill in the seaimp form
+      (seaimp.mem.fill): nghttp2''s huff_decode_table as 4112 fills of 3 bytes (an entry without its padding byte); the
+      older export of hpack-huff-reach left the table uninitialized'
+    sha256: 0767e0fd8afb225fc9930718f69a90bd00026c1adf55d93002516d1ee54b4231
+    established: sat
+  hpack-huff-fill-mut-extra:
+    expected: sat
+    tier: quick
+    time: 11.98
+    harness-expected: sat
+    tags: [mutant, mem-fill]
+    group: HPACK
+    mutant: nghttp2_hd_huffman.c:hp-huff-extra
+    export:
+      harness: harness/hpack_huff.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_huff.c
+        PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
+        MUT: nghttp2_hd_huffman.c:hp-huff-extra
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
+      mem-ssa: keep
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+      date: '2026-11-24'
+    note: 'hpack-huff-mut-extra exported by a SeaHorn that writes global initializers as sea.mem.fill: nghttp2''s
+      huff_decode_table as 4112 fills of 3 bytes (an entry without its padding byte); the older export of
+      hpack-huff-mut-extra left the table uninitialized'
+    sha256: a3e1e44f83b6736c612a97d0744f553c80fb79854bad84dab4b3f05a1db9183a
+    established: sat
+  hpack-huff-fill-proof:
+    expected: unsat
+    tier: quick
+    time: 11.39
+    harness-expected: unsat
+    tags: [proof, mem-fill]
+    group: HPACK
+    export:
+      harness: harness/hpack_huff.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_huff.c
+        PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
+      defines: []
+      bound: 8
+      profile: sea-mlir-export
+      seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
+      mem-ssa: keep
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+      date: '2026-11-24'
+    note: 'hpack-huff-proof exported by a SeaHorn that writes global initializers as sea.mem.fill: nghttp2''s
+      huff_decode_table as 4112 fills of 3 bytes (an entry without its padding byte); the older export of
+      hpack-huff-proof left the table uninitialized'
+    sha256: 9f8f7799b422ce4d4ad09b6458c17a5977ff553894fea40f5f49cff9321805b9
+    established: unsat
+  hpack-huff-fill-reach:
+    expected: sat
+    tier: quick
+    time: 12.47
+    harness-expected: sat
+    tags: [reach, mem-fill]
+    group: HPACK
+    export:
+      harness: harness/hpack_huff.c
+      sweep: hpack_sweep.py
+      script: run_hpack.sh
+      env:
+        SRC: hpack_huff.c
+        PATCHES: nghttp2_hd_huffman.c:hpack-huff-cut
+      defines: [-DCLAIM=1]
+      bound: 8
+      profile: sea-mlir-export
+      seahorn: seahorn dev18 67474bf6d58fe923f5cbb5947def9e794ce613fe
+      mem-ssa: keep
+      seahorn-extra: [--horn-sea-mlir-allow-uninit-globals]
+      date: '2026-11-24'
+    note: 'hpack-huff-reach exported by a SeaHorn that writes global initializers as sea.mem.fill: nghttp2''s
+      huff_decode_table as 4112 fills of 3 bytes (an entry without its padding byte); the older export of
+      hpack-huff-reach left the table uninitialized'
+    sha256: d949935f344edef91dae2761b8843cf43d3cad7bc138b9574957c02d00b217c1
+    established: sat
   hpack-huff-mut-extra:
     expected: sat
     tier: smoke

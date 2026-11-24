@@ -44,6 +44,25 @@ included) and
 records per job in `manifest.yaml`: `export.env` (SRC, TARGET, MOCKS,
 PROOFS, PATCHES, MUT), `export.defines`, bound, and the `.mlir` sha256.
 
+## hpack-huff-fill-*
+
+`hpack-huff-fill-{proof,reach,mut-extra}` and
+`hpack-huff-fill-erase-{proof,reach}` are `hpack-huff-{proof,reach,mut-extra}`
+exported with a newer SeaHorn (dev18 at
+67474bf6d58fe923f5cbb5947def9e794ce613fe, profile `sea-mlir-export`, same
+`run_hpack.sh` recipe and overlays), which exports global initializers:
+nghttp2's `huff_decode_table` becomes 4112 `sea.mem.fill` of 3 bytes each
+(an entry `{fstate, sym}` without its padding byte). The older export
+left that table uninitialized (`--horn-sea-mlir-allow-uninit-globals`, still
+passed for the other globals). The `-erase-` jobs add
+`--horn-sea-mlir-mem-ssa=erase` (the seaimp form, `seaimp.mem.fill`). Tag
+`mem-fill`; a counter rule of the manifest pins the form of the lowering
+(`vc.expand-mem-fill` kept=4112 expanded=0 under `--seam`).
+
+Their verdicts, tiers and times were established on 2026-11-24 with sea-mlir
+fd6d8a7 (sea-vc sha256 af61104be0ba...), two jobs in parallel, not by the family's
+`established` run.
+
 ## h2fc-blowup-*
 
 Copied from an earlier export (the h2fc ablation set): produced by
